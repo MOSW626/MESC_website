@@ -28,7 +28,7 @@ export const IMPORTANT_LINKS: SiteLink[] = [
   {
     label: "기계공학과 회칙",
     labelEn: "ME Council Bylaws",
-    url: "https://drive.google.com/drive/u/4/folders/0B35z5OD_92hpSW5uc2xmZlQ0Zk0?resourcekey=0-Hu4d0fv_Ba1NjXXqsOLNBQ",
+    url: "https://drive.google.com/file/d/1uwPFQuggxrbsZsOVY-mAhFY0KKGyWawk/view?usp=sharing",
     description: "기계공학과 학생회 회칙 문서",
     descriptionEn: "ME Student Council bylaws document",
     icon: "📜",

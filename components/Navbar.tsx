@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { cn } from "@/lib/utils";
@@ -35,7 +33,7 @@ export default function Navbar() {
             </div>
             <div className="flex flex-col leading-tight">
               <span className="font-black text-base tracking-tight text-foreground">ME Council</span>
-              <span className="text-xs text-muted-foreground font-bold">KAIST 기계공학과</span>
+              <span className="text-xs text-muted-foreground font-bold">{t("navbar.subtitle")}</span>
             </div>
           </Link>
 
@@ -73,18 +71,18 @@ export default function Navbar() {
             {/* Language Toggle */}
             <button
               onClick={() => setLang(lang === "ko" ? "en" : "ko")}
-              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-border/40 text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted/40 hover:border-border transition-all duration-300"
+              className="hidden sm:flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg border border-border/40 text-xs font-bold text-muted-foreground hover:text-foreground hover:bg-muted/40 hover:border transition-all duration-300"
               aria-label="Switch language"
             >
               <span className="text-sm">{lang === "ko" ? "🇺🇸" : "🇰🇷"}</span>
-              <span>{lang === "ko" ? "EN" : "KO"}</span>
+              <span>{lang === "ko" ? t("common.english") : t("common.korean")}</span>
             </button>
 
             <ModeToggle />
 
             <Link
               href="/admin"
-              className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg border border-border/40 text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 hover:border-border transition-all duration-300 group"
+              className="hidden sm:flex items-center gap-2 px-3 py-2 rounded-lg border border-border/40 text-xs font-semibold text-muted-foreground hover:text-foreground hover:bg-muted/40 hover:border transition-all duration-300 group"
             >
               <Settings className="h-4 w-4 group-hover:rotate-90 transition-transform duration-500 flex-shrink-0" />
               <span className="hidden md:inline">{t("navbar.admin")}</span>
@@ -135,7 +133,7 @@ export default function Navbar() {
                 className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-border/60 text-muted-foreground hover:bg-muted/30 hover:text-foreground transition-all"
               >
                 <span>{lang === "ko" ? "🇺🇸" : "🇰🇷"}</span>
-                <span className="text-xs font-semibold">{lang === "ko" ? "English" : "한국어"}</span>
+                <span className="text-xs font-semibold">{lang === "ko" ? t("common.english") : t("common.korean")}</span>
               </button>
               <Link
                 href="/admin"
@@ -143,7 +141,7 @@ export default function Navbar() {
                 className="flex-1 flex items-center justify-center gap-2 p-3 rounded-xl border border-dashed border-border/60 text-muted-foreground hover:bg-muted/30 hover:text-foreground transition-all"
               >
                 <Settings className="h-4 w-4" />
-                <span className="text-xs font-semibold">{t("navbar.adminSystem")}</span>
+                <span className="text-xs font-semibold">{t("navbar.admin")}</span>
               </Link>
             </div>
           </nav>

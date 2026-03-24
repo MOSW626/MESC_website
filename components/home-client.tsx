@@ -80,13 +80,13 @@ export function HomeClient({ notices }: HomeClientProps) {
               <h1 className="text-5xl md:text-6xl font-black tracking-tight leading-[1.1] text-balance">
                 {lang === "ko" ? (
                   <>
-                    KAIST 기계공학과<br />
-                    <span className="text-primary">학생회</span>
+                    KAIST {t("home.title")}<br />
+                    <span className="text-primary">{t("home.titleHighlight")}</span>
                   </>
                 ) : (
                   <>
-                    KAIST<br />
-                    <span className="text-primary">ME Student Council</span>
+                    KAIST {t("home.title")}<br />
+                    <span className="text-primary">{t("home.titleHighlight")}</span>
                   </>
                 )}
               </h1>

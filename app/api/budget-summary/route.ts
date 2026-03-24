@@ -2,9 +2,19 @@ import { NextResponse } from "next/server";
 
 const BUDGET_CSV_URL = process.env.GOOGLE_BUDGET_CSV_URL ?? "";
 
-let cachedSummary: BudgetSummary | null = null;
+let cachedData: BudgetData | null = null;
 let cacheTime = 0;
 const CACHE_DURATION = 5 * 60 * 1000;
+
+interface Transaction {
+  date: string;
+  manager: string;
+  description: string;
+  category: string;
+  income: number;
+  expense: number;
+  balance: number;
+}
 
 interface MonthlyData {
   month: string;
@@ -12,11 +22,23 @@ interface MonthlyData {
   expense: number;
 }
 
+interface CategorySummary {
+  name: string;
+  budget: number;
+  spent: number;
+}
+
 interface BudgetSummary {
   income: number;
   expense: number;
   balance: number;
   monthlyData: MonthlyData[];
+  categories: CategorySummary[];
+}
+
+interface BudgetData {
+  summary: BudgetSummary;
+  transactions: Transaction[];
 }
 
 /** RFC 4180 호환 CSV 파서 — 따옴표 안의 쉼표/줄바꿈 처리 */
@@ -71,14 +93,17 @@ function parseAmount(value: string): number {
   return isNaN(n) ? 0 : n;
 }
 
-async function fetchBudgetSummary(): Promise<BudgetSummary> {
+async function fetchBudgetData(): Promise<BudgetData> {
   const now = Date.now();
-  if (cachedSummary && now - cacheTime < CACHE_DURATION) {
-    return cachedSummary;
+  if (cachedData && now - cacheTime < CACHE_DURATION) {
+    return cachedData;
   }
 
   if (!BUDGET_CSV_URL) {
-    return { income: 0, expense: 0, balance: 0, monthlyData: [] };
+    return {
+      summary: { income: 0, expense: 0, balance: 0, monthlyData: [], categories: [] },
+      transactions: [],
+    };
   }
 
   const res = await fetch(BUDGET_CSV_URL, { cache: "no-store" });
@@ -88,7 +113,10 @@ async function fetchBudgetSummary(): Promise<BudgetSummary> {
   const rows = parseCSV(text);
 
   if (rows.length < 2) {
-    return { income: 0, expense: 0, balance: 0, monthlyData: [] };
+    return {
+      summary: { income: 0, expense: 0, balance: 0, monthlyData: [], categories: [] },
+      transactions: [],
+    };
   }
 
   // 헤더 행 자동 탐색: "수입" 또는 "지출" 컬럼이 있는 첫 번째 행
@@ -106,44 +134,67 @@ async function fetchBudgetSummary(): Promise<BudgetSummary> {
   }
 
   if (headerRowIdx < 0) {
-    if (process.env.NODE_ENV === "development") {
-      console.log("[budget-summary] 헤더 행을 찾을 수 없습니다. 전체 헤더:", rows.slice(0, 5).map(r => r.join("|")));
-    }
-    return { income: 0, expense: 0, balance: 0, monthlyData: [] };
+    return {
+      summary: { income: 0, expense: 0, balance: 0, monthlyData: [], categories: [] },
+      transactions: [],
+    };
   }
 
   const dataRows = rows.slice(headerRowIdx + 1);
 
   // 컬럼 인덱스 감지
   const dateIdx = header.findIndex((h) => h.includes("날짜") || h.includes("일자") || h.includes("사업일") || h.includes("date"));
+  const managerIdx = header.findIndex((h) => h.includes("담당자") || h.includes("manager") || h.includes("담당"));
+  const descIdx = header.findIndex((h) => h.includes("집행내용") || h.includes("내용") || h.includes("description") || h.includes("설명"));
+  const categoryIdx = header.findIndex((h) => h.includes("코드") || h.includes("카테고리") || h.includes("category") || h.includes("항목"));
   const incomeIdx = header.findIndex((h) => h.includes("수입") || h.includes("income") || h.includes("입금"));
   const expenseIdx = header.findIndex((h) => h.includes("지출") || h.includes("expense") || h.includes("출금"));
-
-  if (process.env.NODE_ENV === "development") {
-    console.log(`[budget-summary] 헤더(${headerRowIdx}행): ${header.join(", ")}`);
-    console.log(`[budget-summary] 날짜:${dateIdx}, 수입:${incomeIdx}, 지출:${expenseIdx}`);
-  }
+  const balanceIdx = header.findIndex((h) => h.includes("잔액") || h.includes("balance"));
 
   let totalIncome = 0;
   let totalExpense = 0;
   const monthlyMap: Record<string, MonthlyData> = {};
+  const categoryMap: Record<string, CategorySummary> = {};
+  const transactions: Transaction[] = [];
 
   for (const row of dataRows) {
-    // 빈 행, 합계 행 스킵 (모든 셀이 비었거나 "합계"/"계" 포함)
     if (row.every((c) => !c)) continue;
     const rowText = row.join("");
     if (rowText.includes("합계") || rowText.includes("소계") || rowText.includes("계")) continue;
 
     const incomeVal = incomeIdx >= 0 ? parseAmount(row[incomeIdx] ?? "") : 0;
     const expenseVal = expenseIdx >= 0 ? parseAmount(row[expenseIdx] ?? "") : 0;
+    const balanceVal = balanceIdx >= 0 ? parseAmount(row[balanceIdx] ?? "") : 0;
+    const categoryName = categoryIdx >= 0 ? (row[categoryIdx] || "기타") : "기타";
+    const dateStr = row[dateIdx] ?? "";
+
+    // 데이터 정제: 날짜나 금액이 모두 비어있는 행은 스킵
+    if (!dateStr || (incomeVal === 0 && expenseVal === 0)) continue;
 
     totalIncome += incomeVal;
     totalExpense += expenseVal;
 
+    // 카테고리별 집계
+    if (!categoryMap[categoryName]) {
+      categoryMap[categoryName] = { name: categoryName, budget: 0, spent: 0 };
+    }
+    categoryMap[categoryName].spent += expenseVal;
+    categoryMap[categoryName].budget += incomeVal; // 수입이 곧 해당 항목의 예산으로 잡히는 경우 대비
+
+    // 거래 내역 추가
+    transactions.push({
+      date: dateStr,
+      manager: row[managerIdx] ?? "",
+      description: row[descIdx] ?? "",
+      category: categoryName,
+      income: incomeVal,
+      expense: expenseVal,
+      balance: balanceVal,
+    });
+
     // 월별 집계
     if (dateIdx >= 0 && row[dateIdx]) {
       const dateStr = row[dateIdx].replace(/\s/g, "");
-      // YYYYMMDD or YYYY/MM/DD or YYYY-MM-DD
       const match = dateStr.match(/(\d{4})[./\-]?(\d{2})/);
       if (match) {
         const key = `${match[1]}-${match[2]}`;
@@ -156,31 +207,28 @@ async function fetchBudgetSummary(): Promise<BudgetSummary> {
     }
   }
 
-  const monthlyData = Object.values(monthlyMap).sort((a, b) =>
-    a.month.localeCompare(b.month)
-  );
-
-  const summary: BudgetSummary = {
-    income: totalIncome,
-    expense: totalExpense,
-    balance: totalIncome - totalExpense,
-    monthlyData,
+  const data: BudgetData = {
+    summary: {
+      income: totalIncome,
+      expense: totalExpense,
+      balance: totalIncome - totalExpense,
+      monthlyData: Object.values(monthlyMap).sort((a, b) => a.month.localeCompare(b.month)),
+      categories: Object.values(categoryMap).sort((a, b) => b.spent - a.spent),
+    },
+    transactions: transactions.reverse(),
   };
 
-  cachedSummary = summary;
+  cachedData = data;
   cacheTime = now;
-  return summary;
+  return data;
 }
 
 export async function GET() {
   try {
-    const summary = await fetchBudgetSummary();
-    return NextResponse.json(summary);
+    const data = await fetchBudgetData();
+    return NextResponse.json(data);
   } catch (error) {
     console.error("[budget-summary]", error);
-    return NextResponse.json(
-      { error: "예산 데이터를 불러올 수 없습니다." },
-      { status: 500 }
-    );
+    return NextResponse.json({ error: "예산 데이터를 불러올 수 없습니다." }, { status: 500 });
   }
 }
