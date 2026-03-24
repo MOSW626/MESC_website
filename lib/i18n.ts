@@ -191,6 +191,11 @@ export const translations = {
       noMembers: "학생회 멤버 정보가 아직 등록되지 않았습니다.",
       importantLinks: "주요 링크",
       community: "커뮤니티 & SNS",
+      tabCouncil: "학생회 구성원",
+      tabClubs: "과동아리",
+      clubsSubtitle: "KAIST 기계공학과 소속 과동아리를 소개합니다.",
+      visitSite: "공식 사이트 방문",
+      visitInsta: "인스타그램 방문",
     },
   },
   en: {
@@ -375,6 +380,11 @@ export const translations = {
       noMembers: "Student council member information has not been registered yet.",
       importantLinks: "Important Links",
       community: "Community & SNS",
+      tabCouncil: "Council Members",
+      tabClubs: "Department Clubs",
+      clubsSubtitle: "Introducing the department clubs of KAIST Mechanical Engineering.",
+      visitSite: "Visit Official Site",
+      visitInsta: "Visit Instagram",
     },
   },
 };
