@@ -1,0 +1,355 @@
+// 다국어 지원 설정
+export const languages = {
+  ko: { name: "한국어", flag: "🇰🇷" },
+  en: { name: "English", flag: "🇺🇸" },
+} as const;
+
+export type Language = keyof typeof languages;
+
+export const defaultLanguage: Language = "ko";
+
+export const translations = {
+  ko: {
+    // Navbar
+    navbar: {
+      home: "홈",
+      notices: "공지사항",
+      resources: "학습자료",
+      calendar: "캘린더",
+      budget: "예산 내역",
+      checkFee: "과비 확인",
+      members: "학생회 소개",
+      admin: "관리",
+      adminSystem: "관리자 시스템",
+    },
+    // Footer
+    footer: {
+      title: "기계공학과 학생회",
+      subtitle: "Mechanical Engineering Student Council",
+      description: "기계공학과 학생들의 권익 증진과 더 나은 학과 문화 조성을 위해 투명하고 책임감 있게 활동하는 학생회입니다.",
+      quickServices: "주요 서비스",
+      resources: "리소스",
+      contact: "문의처",
+      location: "공학관 학생회실 (201호)",
+      email: "me_student@university.ac.kr",
+      phone: "02-1234-5678",
+      privacy: "개인정보처리방침",
+      terms: "이용약관",
+      website: "학교 홈페이지",
+      copyright: "© {year} 기계공학과 학생회. All rights reserved.",
+    },
+    // Home Page
+    home: {
+      badge: "Student Council Platform",
+      title: "기계공학과",
+      titleHighlight: "학생회 플랫폼",
+      description: "공지사항부터 예산 내역까지, 투명하고 효율적인 학생회 운영을 위한 통합 플랫폼입니다. 모든 정보를 한 곳에서 확인하고 관리하세요.",
+      viewNotices: "공지사항 확인",
+      checkFee: "과비 납부 확인",
+      latestNotices: "최신 공지사항",
+      latestNoticesDesc: "학과의 모든 소식을 한눈에",
+      viewAll: "전체 보기",
+      keyInfo: "주요 안내",
+      keyInfoDesc: "지금 확인하세요",
+      feeCheckTitle: "과비 납부 확인",
+      feeCheckDesc: "학번으로 즉시 조회",
+      feeCheckContent: "학번을 입력하면 납부 현황을 즉시 확인할 수 있습니다. 개인정보는 조회 용도로만 사용됩니다.",
+      feeCheckButton: "조회하기",
+      operatingHours: "학생회실 운영 시간",
+      weekday: "평일",
+      lunchTime: "점심시간",
+      weekend: "주말/공휴일",
+      closed: "휴무",
+      activeCouncil: "활동 중인",
+      activeCouncilDesc: "투명한 운영으로 신뢰받는 기계공학과 학생회",
+      noNotices: "등록된 공지사항이 없습니다.",
+      pinned: "고정",
+    },
+    // Features
+    features: {
+      checkFee: {
+        label: "과비 납부 확인",
+        desc: "학번으로 납부 여부 즉시 조회",
+      },
+      calendar: {
+        label: "학과 일정",
+        desc: "주요 행사 및 학사일정 확인",
+      },
+      budget: {
+        label: "예산 내역",
+        desc: "투명한 학생회비 집행 현황",
+      },
+      resources: {
+        label: "학습자료",
+        desc: "강의자료 및 시험 정보 공유",
+      },
+    },
+    // Budget Page
+    budget: {
+      badge: "Financial Transparency",
+      title: "예산 내역",
+      description: "기계공학과 학생회는 모든 수입 및 지출 내역을 투명하게 공개합니다. 학생회비가 어떻게 사용되고 있는지 실시간으로 확인하세요.",
+      totalIncome: "총 수입",
+      totalExpense: "총 지출",
+      currentBalance: "현재 잔액",
+      expenseRate: "지출률",
+      healthyFinance: "건전한 재정 상태",
+      deficit: "적자 상태",
+      monthlyFlow: "월별 자금 흐름",
+      monthlyFlowDesc: "수입 및 지출 추이를 통한 재정 현황 분석",
+      detailedStatement: "상세 내역서",
+      allTransactions: "모든 거래 기록 확인",
+      fullScreen: "전체 화면",
+      sheetSetup: "예산 시트 연동 대기 중",
+      sheetSetupDesc: "관리자 설정에서 구글 스프레드시트 임베드 URL을 설정하면 상세 내역이 여기에 표시됩니다.",
+      setupGuide: "연동 가이드",
+      income: "수입",
+      expense: "지출",
+      dataUnavailable: "데이터를 불러올 수 없습니다.",
+    },
+    // Notices Page
+    notices: {
+      title: "공지사항",
+      loading: "불러오는 중...",
+      empty: "공지사항이 없습니다.",
+      pinned: "고정",
+      all: "전체",
+      notice: "공지",
+      event: "행사",
+      academic: "학사",
+    },
+    // Resources Page
+    resources: {
+      title: "학습자료",
+      subtitle: "강의자료, 시험족보 등 유용한 자료들을 공유합니다.",
+      naverCafe: "네이버 카페 바로가기",
+      loading: "불러오는 중...",
+      empty: "등록된 자료가 없습니다.",
+      findInCafe: "네이버 카페에서 자료 찾기 →",
+      download: "다운로드 →",
+      cafe: "카페",
+      goToCafe: "카페 이동 →",
+      all: "전체",
+    },
+    // Calendar Page
+    calendar: {
+      title: "학과 일정",
+      subtitle: "기계공학과 학생회 행사 및 학사 일정을 확인하세요.",
+      subscribeGoogle: "Google Calendar 구독",
+      subscribeApple: "Apple Calendar 구독 (iCal)",
+      setupNeeded: "캘린더 설정이 필요합니다",
+      setupDesc: "관리자가 Google Calendar를 연동하면 여기에 일정이 표시됩니다.",
+      mobileTitle: "모바일 구독 방법",
+      infoTitle: "구독 안내",
+      iphoneDesc: "\"Apple Calendar 구독\" 버튼 → 자동으로 캘린더 앱에 추가",
+      androidDesc: "\"Google Calendar 구독\" 버튼 → Google Calendar에 추가",
+      realtimeDesc: "구독 캘린더는 실시간으로 업데이트됩니다.",
+      autoSync: "일정이 추가/변경되면 자동으로 내 캘린더에 반영됩니다.",
+    },
+    // Check Fee Page
+    checkFee: {
+      title: "과비 납부 확인",
+      subtitle: "학번을 입력하면 과비(학생회비) 납부 횟수를 확인할 수 있습니다. 개인정보는 저장되지 않습니다.",
+      queryTitle: "납부 조회",
+      queryDesc: "학번 외 다른 정보는 입력하지 않아도 됩니다.",
+      studentId: "학번",
+      placeholder: "예: 20250001",
+      checkButton: "납부 확인",
+      checking: "조회 중...",
+      enterIdError: "학번을 입력해주세요.",
+      paidCount: "납부 횟수",
+      fullyPaid: "과비가 모두 납부되었습니다.",
+      partialPaid: "일부 납부 내역이 있습니다. 학생회에 문의해주세요.",
+      notFound: "납부 내역 없음",
+      notFoundDesc: "학번을 다시 확인하거나 학생회에 문의해주세요.",
+      privacyNote: "입력한 학번은 납부 횟수 조회에만 사용되며, 서버에 저장되지 않습니다.",
+    },
+    // Members Page
+    members: {
+      title: "학생회 소개",
+      subtitle: "KAIST 기계공학과 학생회 임원진을 소개합니다.",
+      noMembers: "학생회 멤버 정보가 아직 등록되지 않았습니다.",
+      importantLinks: "주요 링크",
+      community: "커뮤니티 & SNS",
+    },
+  },
+  en: {
+    // Navbar
+    navbar: {
+      home: "Home",
+      notices: "Notices",
+      resources: "Resources",
+      calendar: "Calendar",
+      budget: "Budget",
+      checkFee: "Check Fee",
+      members: "About Us",
+      admin: "Admin",
+      adminSystem: "Admin System",
+    },
+    // Footer
+    footer: {
+      title: "Mechanical Engineering Student Council",
+      subtitle: "기계공학과 학생회",
+      description: "We are a student council dedicated to promoting the interests of mechanical engineering students and fostering a better academic culture through transparent and responsible activities.",
+      quickServices: "Quick Services",
+      resources: "Resources",
+      contact: "Contact",
+      location: "Engineering Building, Room 201",
+      email: "me_student@university.ac.kr",
+      phone: "+82-2-1234-5678",
+      privacy: "Privacy Policy",
+      terms: "Terms of Service",
+      website: "University Website",
+      copyright: "© {year} Mechanical Engineering Student Council. All rights reserved.",
+    },
+    // Home Page
+    home: {
+      badge: "Student Council Platform",
+      title: "Mechanical Engineering",
+      titleHighlight: "Student Council Platform",
+      description: "An integrated platform for transparent and efficient student council operations. From notices to budget details, manage all information in one place.",
+      viewNotices: "View Notices",
+      checkFee: "Check Fee Payment",
+      latestNotices: "Latest Notices",
+      latestNoticesDesc: "All department news at a glance",
+      viewAll: "View All",
+      keyInfo: "Key Information",
+      keyInfoDesc: "Check Now",
+      feeCheckTitle: "Fee Payment Check",
+      feeCheckDesc: "Check instantly with student ID",
+      feeCheckContent: "Enter your student ID to check your payment status instantly. Personal information is used only for inquiry purposes.",
+      feeCheckButton: "Check Now",
+      operatingHours: "Student Council Office Hours",
+      weekday: "Weekday",
+      lunchTime: "Lunch Time",
+      weekend: "Weekend/Holiday",
+      closed: "Closed",
+      activeCouncil: "Active",
+      activeCouncilDesc: "Mechanical Engineering Student Council trusted through transparent operations",
+      noNotices: "No notices available.",
+      pinned: "Pinned",
+    },
+    // Features
+    features: {
+      checkFee: {
+        label: "Check Fee Payment",
+        desc: "Check payment status instantly with student ID",
+      },
+      calendar: {
+        label: "Department Calendar",
+        desc: "View major events and academic schedule",
+      },
+      budget: {
+        label: "Budget Details",
+        desc: "Transparent student council fund usage",
+      },
+      resources: {
+        label: "Learning Resources",
+        desc: "Share lecture materials and exam information",
+      },
+    },
+    // Budget Page
+    budget: {
+      badge: "Financial Transparency",
+      title: "Budget",
+      description: "The Mechanical Engineering Student Council publicly discloses all income and expense records. Check in real-time how student council fees are being used.",
+      totalIncome: "Total Income",
+      totalExpense: "Total Expense",
+      currentBalance: "Current Balance",
+      expenseRate: "Expense Rate",
+      healthyFinance: "Healthy Financial Status",
+      deficit: "Deficit Status",
+      monthlyFlow: "Monthly Cash Flow",
+      monthlyFlowDesc: "Financial status analysis through income and expense trends",
+      detailedStatement: "Detailed Statement",
+      allTransactions: "View All Transactions",
+      fullScreen: "Full Screen",
+      sheetSetup: "Budget Sheet Setup Pending",
+      sheetSetupDesc: "When the admin sets up the Google Sheets embed URL in settings, detailed records will be displayed here.",
+      setupGuide: "Setup Guide",
+      income: "Income",
+      expense: "Expense",
+      dataUnavailable: "Data could not be loaded.",
+    },
+    // Notices Page
+    notices: {
+      title: "Notices",
+      loading: "Loading...",
+      empty: "No notices available.",
+      pinned: "Pinned",
+      all: "All",
+      notice: "Notice",
+      event: "Event",
+      academic: "Academic",
+    },
+    // Resources Page
+    resources: {
+      title: "Learning Resources",
+      subtitle: "We share useful materials including lecture notes and past exams.",
+      naverCafe: "Go to Naver Cafe",
+      loading: "Loading...",
+      empty: "No resources available.",
+      findInCafe: "Find resources in Naver Cafe →",
+      download: "Download →",
+      cafe: "Cafe",
+      goToCafe: "Go to Cafe →",
+      all: "All",
+    },
+    // Calendar Page
+    calendar: {
+      title: "Department Calendar",
+      subtitle: "Check events and academic schedules for KAIST ME.",
+      subscribeGoogle: "Subscribe via Google Calendar",
+      subscribeApple: "Subscribe via Apple Calendar (iCal)",
+      setupNeeded: "Calendar Setup Required",
+      setupDesc: "Once the admin sets up Google Calendar integration, events will appear here.",
+      mobileTitle: "Mobile Subscription Guide",
+      infoTitle: "Subscription Info",
+      iphoneDesc: "Tap \"Subscribe via Apple Calendar\" → Automatically added to Calendar app",
+      androidDesc: "Tap \"Subscribe via Google Calendar\" → Added to Google Calendar",
+      realtimeDesc: "Subscribed calendars update in real-time.",
+      autoSync: "Events are automatically reflected in your calendar when added or changed.",
+    },
+    // Check Fee Page
+    checkFee: {
+      title: "Check Fee Payment",
+      subtitle: "Enter your student ID to check how many times you have paid the student council fee. No personal data is stored.",
+      queryTitle: "Payment Lookup",
+      queryDesc: "You only need your student ID.",
+      studentId: "Student ID",
+      placeholder: "e.g. 20250001",
+      checkButton: "Check Payment",
+      checking: "Checking...",
+      enterIdError: "Please enter your student ID.",
+      paidCount: "Payment Count",
+      fullyPaid: "All fees have been paid.",
+      partialPaid: "Partial payment found. Please contact the student council.",
+      notFound: "No Payment Record",
+      notFoundDesc: "Please verify your student ID or contact the student council.",
+      privacyNote: "Your student ID is used only for payment lookup and is never stored on the server.",
+    },
+    // Members Page
+    members: {
+      title: "About Us",
+      subtitle: "Meet the KAIST Mechanical Engineering Student Council members.",
+      noMembers: "Member information has not been registered yet.",
+      importantLinks: "Important Links",
+      community: "Community & SNS",
+    },
+  },
+} as const;
+
+export function getTranslation(lang: Language, key: string): string {
+  const keys = key.split(".");
+  let value: any = translations[lang];
+  
+  for (const k of keys) {
+    if (value && typeof value === "object" && k in value) {
+      value = value[k];
+    } else {
+      return key; // Fallback to key if translation not found
+    }
+  }
+  
+  return typeof value === "string" ? value : key;
+}

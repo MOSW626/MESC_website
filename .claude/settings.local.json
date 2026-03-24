@@ -12,7 +12,23 @@
       "Bash(npx shadcn@latest init --yes --base-color zinc)",
       "Bash(npx shadcn@latest init --yes)",
       "Bash(printf '\\\\n\\\\n')",
-      "Bash(npx shadcn@latest init --help)"
+      "Bash(npx shadcn@latest init --help)",
+      "Bash(npx shadcn@latest add card badge input textarea select separator tabs alert dialog --yes)",
+      "Bash(npx shadcn@latest add table label dropdown-menu --yes)",
+      "Bash(DATABASE_URL=\"file:./prisma/dev.db\" npx prisma migrate dev --name init)",
+      "Bash(npm run:*)",
+      "Bash(node -e \"const { PrismaLibSql } = require\\(''@prisma/adapter-libsql''\\); console.log\\(PrismaLibSql.toString\\(\\).slice\\(0, 200\\)\\)\")",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(pkill -f \"next dev\")",
+      "WebSearch",
+      "WebFetch(domain:me.kaist.ac.kr)",
+      "WebFetch(domain:portal.kaist.ac.kr)",
+      "WebFetch(domain:gsa.kaist.ac.kr)",
+      "WebFetch(domain:www.kaist.ac.kr)",
+      "Bash(node -e \"const c=require\\(''crypto''\\);console.log\\(c.randomBytes\\(48\\).toString\\(''base64url''\\)\\)\")",
+      "Bash(npx tsc:*)",
+      "Bash(git add:*)",
+      "Bash(git commit:*)"
     ]
   }
 }

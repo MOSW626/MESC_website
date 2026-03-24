@@ -1,13 +1,46 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
-  output   = "../app/generated/prisma"
+  provider = "prisma-client-js"
+  output   = "../node_modules/.prisma/client"
 }
 
 datasource db {
   provider = "sqlite"
+}
+
+model Notice {
+  id        Int      @id @default(autoincrement())
+  title     String
+  content   String
+  category  String   @default("공지")
+  pinned    Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Resource {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String?
+  fileUrl     String
+  category    String   @default("기타")
+  createdAt   DateTime @default(now())
+}
+
+model BudgetItem {
+  id          Int      @id @default(autoincrement())
+  date        DateTime
+  description String
+  amount      Int
+  type        String
+  category    String   @default("기타")
+  receiptUrl  String?
+  createdAt   DateTime @default(now())
+}
+
+model Member {
+  id       Int     @id @default(autoincrement())
+  name     String
+  role     String
+  imageUrl String?
+  order    Int     @default(0)
 }

@@ -1,0 +1,46 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { auth } from "@/lib/auth";
+import { isValidString, isAllowedCategory } from "@/lib/validation";
+
+const ALLOWED_CATEGORIES = ["공지", "행사", "학사"];
+
+export async function GET() {
+  const notices = await prisma.notice.findMany({
+    orderBy: [{ pinned: "desc" }, { createdAt: "desc" }],
+  });
+  return NextResponse.json(notices);
+}
+
+export async function POST(req: NextRequest) {
+  const session = await auth();
+  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  let body: unknown;
+  try {
+    body = await req.json();
+  } catch {
+    return NextResponse.json({ error: "Invalid JSON" }, { status: 400 });
+  }
+
+  const b = body as Record<string, unknown>;
+
+  if (!isValidString(b.title, 200)) {
+    return NextResponse.json({ error: "제목은 1~200자 이내여야 합니다." }, { status: 400 });
+  }
+  if (!isValidString(b.content, 10000)) {
+    return NextResponse.json({ error: "내용은 1~10000자 이내여야 합니다." }, { status: 400 });
+  }
+
+  const category = isAllowedCategory(b.category, ALLOWED_CATEGORIES) ? b.category : "공지";
+
+  const notice = await prisma.notice.create({
+    data: {
+      title: b.title.trim(),
+      content: b.content.trim(),
+      category,
+      pinned: Boolean(b.pinned),
+    },
+  });
+  return NextResponse.json(notice);
+}
