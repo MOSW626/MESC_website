@@ -56,7 +56,23 @@
       "Bash(curl -s -o /dev/null -w \"%{http_code}\" https://mesc-website.vercel.app/api/members)",
       "Bash(curl -s https://mesc-website.vercel.app/api/members)",
       "Bash(curl -sv https://mesc-website.vercel.app/api/members)",
-      "Bash(curl -s https://mesc-website.vercel.app/api/debug)"
+      "Bash(curl -s https://mesc-website.vercel.app/api/debug)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" https://mesc-website.vercel.app/)",
+      "Bash(ls /Users/an-yeonsu/Desktop/vivecoding/ME_website/app/admin/\\\\\\(protected\\\\\\)/)",
+      "Bash(ls /Users/an-yeonsu/Desktop/vivecoding/ME_website/app/api/notices/[id]/)",
+      "Bash(cat /Users/an-yeonsu/Desktop/vivecoding/ME_website/app/api/notices/[id]/route.ts)",
+      "Bash(cat /Users/an-yeonsu/Desktop/vivecoding/ME_website/app/admin/\\\\\\(protected\\\\\\)/notices/page.tsx)",
+      "Bash(cat /Users/an-yeonsu/Desktop/vivecoding/ME_website/app/api/resources/[id]/route.ts)",
+      "Bash(cat /Users/an-yeonsu/Desktop/vivecoding/ME_website/app/admin/\\\\\\(protected\\\\\\)/resources/page.tsx)",
+      "Bash(cat /Users/an-yeonsu/Desktop/vivecoding/ME_website/app/admin/\\\\\\(protected\\\\\\)/members/page.tsx)",
+      "Bash(wc -l /Users/an-yeonsu/Desktop/vivecoding/ME_website/app/admin/\\\\\\(protected\\\\\\)/notices/page.tsx)",
+      "WebFetch(domain:mr.kaist.ac.kr)",
+      "WebFetch(domain:www.daejonilbo.com)",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" -X POST https://mesc-website.vercel.app/api/auth/callback/credentials -H \"Content-Type: application/json\" -d '{\"\"username\"\":\"\"admin\"\",\"\"password\"\":\"\"rlrPrlrP26!!\"\"}')",
+      "Bash(cat /Users/an-yeonsu/Desktop/vivecoding/ME_website/app/admin/\\\\\\(protected\\\\\\)/layout.tsx)",
+      "Bash(cat /Users/an-yeonsu/Desktop/vivecoding/ME_website/app/api/auth/[...nextauth]/route.ts)",
+      "Bash(npx shadcn@latest add tabs --yes)",
+      "Bash(curl -s https://mesc-website.vercel.app/api/debug-auth)"
     ]
   }
 }
