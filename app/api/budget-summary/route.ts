@@ -12,11 +12,18 @@ interface MonthlyData {
   expense: number;
 }
 
+interface ProjectData {
+  name: string;
+  income: number;
+  expense: number;
+}
+
 interface BudgetSummary {
   income: number;
   expense: number;
   balance: number;
   monthlyData: MonthlyData[];
+  projectData: ProjectData[];
 }
 
 /** RFC 4180 호환 CSV 파서 — 따옴표 안의 쉼표/줄바꿈 처리 */
@@ -78,7 +85,7 @@ async function fetchBudgetSummary(): Promise<BudgetSummary> {
   }
 
   if (!BUDGET_CSV_URL) {
-    return { income: 0, expense: 0, balance: 0, monthlyData: [] };
+    return { income: 0, expense: 0, balance: 0, monthlyData: [], projectData: [] };
   }
 
   const res = await fetch(BUDGET_CSV_URL, { cache: "no-store" });
@@ -88,7 +95,7 @@ async function fetchBudgetSummary(): Promise<BudgetSummary> {
   const rows = parseCSV(text);
 
   if (rows.length < 2) {
-    return { income: 0, expense: 0, balance: 0, monthlyData: [] };
+    return { income: 0, expense: 0, balance: 0, monthlyData: [], projectData: [] };
   }
 
   // 헤더 행 자동 탐색: "수입" 또는 "지출" 컬럼이 있는 첫 번째 행
@@ -109,7 +116,7 @@ async function fetchBudgetSummary(): Promise<BudgetSummary> {
     if (process.env.NODE_ENV === "development") {
       console.log("[budget-summary] 헤더 행을 찾을 수 없습니다. 전체 헤더:", rows.slice(0, 5).map(r => r.join("|")));
     }
-    return { income: 0, expense: 0, balance: 0, monthlyData: [] };
+    return { income: 0, expense: 0, balance: 0, monthlyData: [], projectData: [] };
   }
 
   const dataRows = rows.slice(headerRowIdx + 1);
@@ -124,9 +131,15 @@ async function fetchBudgetSummary(): Promise<BudgetSummary> {
     console.log(`[budget-summary] 날짜:${dateIdx}, 수입:${incomeIdx}, 지출:${expenseIdx}`);
   }
 
+  // 집행내용(사업명) 컬럼 인덱스 감지
+  const descIdx = header.findIndex((h) =>
+    h.includes("집행내용") || h.includes("내용") || h.includes("메모") || h.includes("description")
+  );
+
   let totalIncome = 0;
   let totalExpense = 0;
   const monthlyMap: Record<string, MonthlyData> = {};
+  const projectMap: Record<string, ProjectData> = {};
 
   for (const row of dataRows) {
     // 빈 행, 합계 행 스킵 (모든 셀이 비었거나 "합계"/"계" 포함)
@@ -139,6 +152,16 @@ async function fetchBudgetSummary(): Promise<BudgetSummary> {
 
     totalIncome += incomeVal;
     totalExpense += expenseVal;
+
+    // 사업별 집계 (집행내용 기준)
+    if (descIdx >= 0 && row[descIdx] && row[descIdx].trim()) {
+      const projName = row[descIdx].trim();
+      if (!projectMap[projName]) {
+        projectMap[projName] = { name: projName, income: 0, expense: 0 };
+      }
+      projectMap[projName].income += incomeVal;
+      projectMap[projName].expense += expenseVal;
+    }
 
     // 월별 집계
     if (dateIdx >= 0 && row[dateIdx]) {
@@ -160,11 +183,18 @@ async function fetchBudgetSummary(): Promise<BudgetSummary> {
     a.month.localeCompare(b.month)
   );
 
+  // 사업별: 지출 + 수입 합계 기준 내림차순, 최대 15개
+  const projectData = Object.values(projectMap)
+    .filter((p) => p.income > 0 || p.expense > 0)
+    .sort((a, b) => (b.income + b.expense) - (a.income + a.expense))
+    .slice(0, 15);
+
   const summary: BudgetSummary = {
     income: totalIncome,
     expense: totalExpense,
     balance: totalIncome - totalExpense,
     monthlyData,
+    projectData,
   };
 
   cachedSummary = summary;

@@ -42,6 +42,7 @@ model Member {
   name     String
   role     String
   bureau   String  @default("")
+  council  Boolean @default(false)
   imageUrl String?
   order    Int     @default(0)
 }

@@ -33,6 +33,7 @@ interface BudgetSummary {
   expense: number;
   balance: number;
   monthlyData: { month: string; income: number; expense: number }[];
+  projectData: { name: string; income: number; expense: number }[];
 }
 
 function formatKRW(amount: number) {
@@ -159,37 +160,43 @@ export default function BudgetPage() {
           </div>
         )}
 
-        {/* Monthly Chart */}
-        {hasData && summary.monthlyData.length > 0 && (
+        {/* Project Chart */}
+        {hasData && summary.projectData && summary.projectData.length > 0 && (
           <Card className="mb-12 border-border/60 shadow-lg shadow-primary/5 overflow-hidden rounded-2xl">
             <CardHeader className="bg-gradient-to-r from-muted/40 to-muted/20 border-b border-border/40 pb-6">
               <div className="space-y-2">
                 <CardTitle className="text-xl font-black flex items-center gap-2">
                   <TrendingUp className="h-5 w-5 text-primary" />
-                  {t("budget.monthlyFlow")}
+                  사업별 자금 내역
                 </CardTitle>
                 <CardDescription className="font-medium">
-                  {t("budget.monthlyFlowDesc")}
+                  집행 내용별 수입·지출 현황
                 </CardDescription>
               </div>
             </CardHeader>
             <CardContent className="pt-8 pb-6">
-              <div className="h-[400px] w-full">
+              <div style={{ height: `${Math.max(300, summary.projectData.length * 52)}px` }} className="w-full">
                 <ResponsiveContainer width="100%" height="100%">
-                  <BarChart data={summary.monthlyData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="oklch(0.9 0.03 240 / 0.2)" />
+                  <BarChart
+                    data={summary.projectData}
+                    layout="vertical"
+                    margin={{ top: 5, right: 30, left: 10, bottom: 5 }}
+                  >
+                    <CartesianGrid strokeDasharray="3 3" horizontal={false} stroke="oklch(0.9 0.03 240 / 0.2)" />
                     <XAxis
-                      dataKey="month"
-                      axisLine={false}
-                      tickLine={false}
-                      tick={{ fill: "var(--muted-foreground)", fontSize: 12, fontWeight: 600 }}
-                      dy={10}
-                    />
-                    <YAxis
+                      type="number"
                       axisLine={false}
                       tickLine={false}
                       tick={{ fill: "var(--muted-foreground)", fontSize: 11, fontWeight: 600 }}
                       tickFormatter={(v) => `${Math.round(v / 10000)}만`}
+                    />
+                    <YAxis
+                      type="category"
+                      dataKey="name"
+                      axisLine={false}
+                      tickLine={false}
+                      width={130}
+                      tick={{ fill: "var(--foreground)", fontSize: 12, fontWeight: 600 }}
                     />
                     <Tooltip
                       cursor={{ fill: "var(--muted)", opacity: 0.4 }}
@@ -203,9 +210,9 @@ export default function BudgetPage() {
                       formatter={(value) => [formatKRW(Number(value)), ""]}
                       labelStyle={{ color: "var(--foreground)", fontWeight: "bold" }}
                     />
-                    <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ paddingBottom: "20px", fontWeight: 600 }} />
-                    <Bar dataKey="income" name={t("budget.income")} fill="oklch(0.6 0.15 140)" radius={[8, 8, 0, 0]} barSize={36} />
-                    <Bar dataKey="expense" name={t("budget.expense")} fill="oklch(0.6 0.2 25)" radius={[8, 8, 0, 0]} barSize={36} />
+                    <Legend verticalAlign="top" align="right" iconType="circle" wrapperStyle={{ paddingBottom: "16px", fontWeight: 600 }} />
+                    <Bar dataKey="income" name={t("budget.income")} fill="oklch(0.6 0.15 140)" radius={[0, 6, 6, 0]} barSize={18} />
+                    <Bar dataKey="expense" name={t("budget.expense")} fill="oklch(0.6 0.2 25)" radius={[0, 6, 6, 0]} barSize={18} />
                   </BarChart>
                 </ResponsiveContainer>
               </div>

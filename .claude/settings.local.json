@@ -35,7 +35,8 @@
       "Bash(curl -sL \"https://docs.google.com/spreadsheets/d/e/2PACX-1vQFgQ0AnsHdRB0DrA22NvUkCNUQVTyOCLqYG9725TSBwAKyNbU0vVXghv16IkqdcAiRf3aDuGGzjbgs/pub?gid=1048214979&single=true&output=csv\")",
       "Bash(cat /Users/an-yeonsu/Desktop/vivecoding/ME_website/app/api/members/[id]/route.ts)",
       "Bash(pkill -f \"turbopack\")",
-      "Bash(curl -s http://localhost:3000/api/budget-summary)"
+      "Bash(curl -s http://localhost:3000/api/budget-summary)",
+      "Bash(npx shadcn@latest add checkbox --yes)"
     ]
   }
 }

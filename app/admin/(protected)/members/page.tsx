@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
 
 interface Member {
@@ -13,6 +14,7 @@ interface Member {
   name: string;
   role: string;
   bureau: string;
+  council: boolean;
   imageUrl: string | null;
   order: number;
 }
@@ -22,6 +24,7 @@ export default function AdminMembersPage() {
   const [name, setName] = useState("");
   const [role, setRole] = useState("");
   const [bureau, setBureau] = useState("");
+  const [council, setCouncil] = useState(false);
   const [imageUrl, setImageUrl] = useState("");
   const [order, setOrder] = useState("0");
   const [submitting, setSubmitting] = useState(false);
@@ -43,7 +46,7 @@ export default function AdminMembersPage() {
       const res = await fetch("/api/members", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, role, bureau, imageUrl: imageUrl || null, order: Number(order) }),
+        body: JSON.stringify({ name, role, bureau, council, imageUrl: imageUrl || null, order: Number(order) }),
       });
       const data = await res.json();
       if (!res.ok) {
@@ -51,7 +54,7 @@ export default function AdminMembersPage() {
         setSubmitting(false);
         return;
       }
-      setName(""); setRole(""); setBureau(""); setImageUrl(""); setOrder("0");
+      setName(""); setRole(""); setBureau(""); setCouncil(false); setImageUrl(""); setOrder("0");
       loadMembers();
     } catch (e) {
       setSubmitError("네트워크 오류가 발생했습니다.");
@@ -91,6 +94,16 @@ export default function AdminMembersPage() {
             <Label>국 (선택) — 없으면 비워두세요</Label>
             <Input value={bureau} onChange={(e) => setBureau(e.target.value)} placeholder="사무국, 홍보미디어국, 학술국, 복지국 등" />
           </div>
+          <div className="flex items-center gap-3 py-1">
+            <Checkbox
+              id="council"
+              checked={council}
+              onCheckedChange={(v: boolean | "indeterminate") => setCouncil(v === true)}
+            />
+            <Label htmlFor="council" className="cursor-pointer">
+              회장단에도 표시 <span className="text-muted-foreground font-normal text-xs">(국 소속이어도 회장단 섹션에 함께 표시됨)</span>
+            </Label>
+          </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>사진 URL (선택)</Label>
@@ -128,6 +141,7 @@ export default function AdminMembersPage() {
                 <p className="font-semibold text-sm">{member.name}</p>
                 <p className="text-xs text-muted-foreground">{member.role}</p>
                 {member.bureau && <p className="text-xs text-primary/70">{member.bureau}</p>}
+                {member.council && <p className="text-xs font-bold text-amber-600">★ 회장단</p>}
                 <p className="text-xs text-muted-foreground">순서: {member.order}</p>
               </div>
               <Button

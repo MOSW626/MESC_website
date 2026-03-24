@@ -10,6 +10,7 @@ interface Member {
   name: string;
   role: string;
   bureau: string;
+  council: boolean;
   imageUrl: string | null;
   order: number;
 }
@@ -40,13 +41,28 @@ function MemberCard({ member }: { member: Member }) {
 export function MembersClient({ members }: { members: Member[] }) {
   const { t, lang } = useLanguage();
 
-  // 국별로 그룹화 (bureau가 없는 멤버는 '회장단'으로)
-  const grouped = members.reduce<Record<string, Member[]>>((acc, m) => {
-    const key = m.bureau && m.bureau.trim() ? m.bureau.trim() : "회장단";
-    if (!acc[key]) acc[key] = [];
-    acc[key].push(m);
-    return acc;
-  }, {});
+  // 그룹화 로직:
+  // - bureau가 비어있으면 → 회장단만
+  // - bureau가 있고 council=false → 해당 국만
+  // - bureau가 있고 council=true  → 회장단 + 해당 국 (2곳에 표시)
+  const grouped: Record<string, Member[]> = {};
+
+  for (const m of members) {
+    const hasBureau = m.bureau && m.bureau.trim();
+
+    // 회장단 섹션: bureau 없거나 council=true 인 경우
+    if (!hasBureau || m.council) {
+      if (!grouped["회장단"]) grouped["회장단"] = [];
+      grouped["회장단"].push(m);
+    }
+
+    // 국 섹션: bureau가 있는 경우
+    if (hasBureau) {
+      const key = m.bureau.trim();
+      if (!grouped[key]) grouped[key] = [];
+      grouped[key].push(m);
+    }
+  }
 
   // '회장단'을 맨 앞에, 나머지는 가나다순
   const groupOrder = Object.keys(grouped).sort((a, b) => {

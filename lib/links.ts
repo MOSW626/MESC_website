@@ -26,25 +26,25 @@ export const IMPORTANT_LINKS: SiteLink[] = [
     icon: "🎓",
   },
   {
-    label: "총학생회",
-    labelEn: "Student Association",
-    url: "https://www.facebook.com/ua.kaist/",
-    description: "KAIST 학부 총학생회",
-    descriptionEn: "KAIST Undergraduate Association",
-    icon: "🏛️",
-  },
-  {
-    label: "학생처",
-    labelEn: "Student Affairs",
-    url: "https://www.kaist.ac.kr/kr/html/campus/05.html",
-    description: "학생 지원 및 복지",
-    descriptionEn: "Student support and welfare",
-    icon: "📋",
+    label: "기계공학과 회칙",
+    labelEn: "ME Council Bylaws",
+    url: "https://drive.google.com/drive/u/4/folders/0B35z5OD_92hpSW5uc2xmZlQ0Zk0?resourcekey=0-Hu4d0fv_Ba1NjXXqsOLNBQ",
+    description: "기계공학과 학생회 회칙 문서",
+    descriptionEn: "ME Student Council bylaws document",
+    icon: "📜",
   },
 ];
 
 // 학생회 SNS/커뮤니티 링크
 export const COMMUNITY_LINKS: SiteLink[] = [
+  {
+    label: "카카오톡 채널",
+    labelEn: "KakaoTalk Channel",
+    url: "http://pf.kakao.com/_fHXxkn/chat",
+    description: "학생회 공지 채널",
+    descriptionEn: "Student council announcement channel",
+    icon: "💬",
+  },
   {
     label: "네이버 카페 (학습자료)",
     labelEn: "Naver Cafe (Resources)",
@@ -52,14 +52,6 @@ export const COMMUNITY_LINKS: SiteLink[] = [
     description: "강의자료, 시험족보 등",
     descriptionEn: "Lecture materials, past exams, etc.",
     icon: "📚",
-  },
-  {
-    label: "카카오톡 오픈채팅",
-    labelEn: "KakaoTalk Open Chat",
-    url: "#",
-    description: "학생회 공지 채널 (추후 업데이트)",
-    descriptionEn: "Student council announcement channel (coming soon)",
-    icon: "💬",
   },
   {
     label: "인스타그램 (학생회)",
