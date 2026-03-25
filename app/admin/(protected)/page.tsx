@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { auth, signOut } from "@/lib/auth";
-import { Settings, Bell, BookOpen, Users, Home, ExternalLink, ShieldCheck, LogOut, GraduationCap, Camera } from "lucide-react";
+import { Settings, Bell, BookOpen, Users, Home, ExternalLink, ShieldCheck, LogOut, GraduationCap, Camera, Cookie } from "lucide-react";
 
 export default async function AdminPage() {
   const session = await auth();
@@ -43,6 +43,13 @@ export default async function AdminPage() {
       icon: Camera,
       desc: "행사 갤러리·사진 업로드",
       color: "bg-pink-500/10 text-pink-600 dark:text-pink-400 border-pink-500/20",
+    },
+    {
+      href: "/admin/snack-wishes",
+      label: "간식 위시리스트",
+      icon: Cookie,
+      desc: "위시리스트 조회·삭제",
+      color: "bg-amber-500/10 text-amber-600 dark:text-amber-400 border-amber-500/20",
     },
   ];
 
