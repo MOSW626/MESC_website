@@ -1,6 +1,7 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  poweredByHeader: false,
   serverExternalPackages: ["@prisma/client", "better-sqlite3"],
 
   images: {
@@ -27,6 +28,18 @@ const nextConfig: NextConfig = {
           { key: "Permissions-Policy", value: "camera=(), microphone=(), geolocation=()" },
           // DNS 프리페치 허용 (성능)
           { key: "X-DNS-Prefetch-Control", value: "on" },
+          // Content Security Policy
+          {
+            key: "Content-Security-Policy",
+            value: [
+              "default-src 'self'",
+              "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
+              "style-src 'self' 'unsafe-inline'",
+              "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com",
+              "frame-src https://calendar.google.com",
+              "connect-src 'self'",
+            ].join("; "),
+          },
         ],
       },
     ];
