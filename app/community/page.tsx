@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useLanguage } from "@/lib/language-context";
 import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -38,6 +38,7 @@ export default function CommunityPage() {
   const [wishSubmitting, setWishSubmitting] = useState(false);
   const [wishError, setWishError] = useState("");
   const [loading, setLoading] = useState(true);
+  const wishSubmittingRef = useRef(false);
 
   useEffect(() => {
     fetch("/api/events").then(r => r.json()).then(d => { setEvents(d); setLoading(false); });
@@ -45,7 +46,8 @@ export default function CommunityPage() {
   }, []);
 
   async function submitWish() {
-    if (!wishInput.trim() || wishSubmitting) return;
+    if (!wishInput.trim() || wishSubmittingRef.current) return;
+    wishSubmittingRef.current = true;
     setWishSubmitting(true); setWishError("");
     const res = await fetch("/api/snack-wishes", {
       method: "POST", headers: { "Content-Type": "application/json" },
@@ -57,6 +59,7 @@ export default function CommunityPage() {
     } else {
       setWishError(data.error ?? "오류가 발생했습니다.");
     }
+    wishSubmittingRef.current = false;
     setWishSubmitting(false);
   }
 
