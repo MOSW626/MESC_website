@@ -7,8 +7,9 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Loader2, MessageSquare, Star, Upload, X } from "lucide-react";
+import { Camera, Download, Loader2, MessageSquare, Star, Upload, X } from "lucide-react";
 import Image from "next/image";
+import JSZip from "jszip";
 
 interface EventPhoto { id: number; imageUrl: string; caption: string | null; }
 interface Feedback { id: number; content: string; rating: number; createdAt: string; }
@@ -29,6 +30,7 @@ export default function AdminEventsPage() {
   const [submitError, setSubmitError] = useState("");
   const [selectedEvent, setSelectedEvent] = useState<Event | null>(null);
   const [photoUploading, setPhotoUploading] = useState(false);
+  const [zipDownloading, setZipDownloading] = useState(false);
   const [feedbackEvent, setFeedbackEvent] = useState<Event | null>(null);
   const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
   const formRef = useRef<HTMLDivElement>(null);
@@ -110,6 +112,39 @@ export default function AdminEventsPage() {
     const updated = await fetch(`/api/events/${selectedEvent.id}`).then(r => r.json());
     setSelectedEvent(updated);
     load();
+  }
+
+  async function handleDownloadPhotos() {
+    if (!selectedEvent || selectedEvent.photos.length === 0) return;
+    setZipDownloading(true);
+    try {
+      const zip = new JSZip();
+      const folder = zip.folder(selectedEvent.title) ?? zip;
+      const results = await Promise.allSettled(
+        selectedEvent.photos.map(async (photo, index) => {
+          const res = await fetch(photo.imageUrl);
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          const urlPath = new URL(photo.imageUrl).pathname;
+          const ext = urlPath.match(/\.(jpe?g|png|webp|gif)$/i)?.[1] ?? "jpg";
+          const blob = await res.blob();
+          folder.file(`${String(index + 1).padStart(2, "0")}.${ext}`, blob);
+        })
+      );
+      const failed = results.filter((r) => r.status === "rejected").length;
+      const zipBlob = await zip.generateAsync({ type: "blob" });
+      const safeName = selectedEvent.title.replace(/[\\/:*?"<>|]/g, "_");
+      const url = URL.createObjectURL(zipBlob);
+      const a = document.createElement("a");
+      a.href = url; a.download = `${safeName}-사진.zip`;
+      document.body.appendChild(a); a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+      if (failed > 0) alert(`ZIP 생성 완료 (${failed}개 사진을 가져오지 못했습니다).`);
+    } catch {
+      alert("ZIP 다운로드 중 오류가 발생했습니다.");
+    } finally {
+      setZipDownloading(false);
+    }
   }
 
   async function openFeedbacks(e: Event) {
@@ -209,6 +244,16 @@ export default function AdminEventsPage() {
             </div>
             <input ref={photoInputRef} type="file" accept="image/*" multiple className="hidden"
               onChange={(e) => { const files = e.target.files; if (files?.length) uploadPhotos(files); }} />
+            {selectedEvent.photos.length > 0 && (
+              <div className="flex justify-end">
+                <Button variant="outline" size="sm" onClick={handleDownloadPhotos}
+                  disabled={zipDownloading || photoUploading} className="gap-2">
+                  {zipDownloading
+                    ? <><Loader2 className="h-4 w-4 animate-spin" />ZIP 생성 중...</>
+                    : <><Download className="h-4 w-4" />ZIP 다운로드</>}
+                </Button>
+              </div>
+            )}
           </CardContent>
         </Card>
       )}
