@@ -36,7 +36,7 @@ const nextConfig: NextConfig = {
               "script-src 'self' 'unsafe-inline' 'unsafe-eval'",
               "style-src 'self' 'unsafe-inline'",
               "img-src 'self' data: blob: https://*.public.blob.vercel-storage.com",
-              "frame-src https://calendar.google.com",
+              "frame-src https://calendar.google.com https://docs.google.com",
               "connect-src 'self' https://*.public.blob.vercel-storage.com",
             ].join("; "),
           },
