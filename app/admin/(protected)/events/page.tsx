@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Camera, Download, FolderSync, Loader2, MessageSquare, RefreshCw, Star, Upload, X } from "lucide-react";
+import { Camera, Check, Download, FolderSync, Link2, Loader2, MessageSquare, RefreshCw, Star, Unplug, Upload, X } from "lucide-react";
 import Image from "next/image";
 import JSZip from "jszip";
 
@@ -38,6 +38,10 @@ export default function AdminEventsPage() {
   const [driveSyncing, setDriveSyncing] = useState(false);
   const [driveMessage, setDriveMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [resyncingId, setResyncingId] = useState<number | null>(null);
+  const [driveStatus, setDriveStatus] = useState<{ connected: boolean; email: string | null; parentFolderId: string | null } | null>(null);
+  const [parentFolderInput, setParentFolderInput] = useState("");
+  const [parentFolderSaving, setParentFolderSaving] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -47,7 +51,58 @@ export default function AdminEventsPage() {
     setEvents(await res.json());
   }
 
-  useEffect(() => { load(); }, []);
+  async function loadDriveStatus() {
+    const res = await fetch("/api/auth/drive/status");
+    if (res.ok) {
+      const data = await res.json();
+      setDriveStatus(data);
+      setParentFolderInput(data.parentFolderId ?? "");
+    }
+  }
+
+  useEffect(() => {
+    load();
+    loadDriveStatus();
+    // OAuth 콜백 후 query string 으로 결과 전달
+    if (typeof window !== "undefined") {
+      const params = new URLSearchParams(window.location.search);
+      if (params.get("drive_connected") === "1") {
+        setDriveMessage({ type: "success", text: "Drive 가 연결되었습니다. 아래에서 부모 폴더를 설정하세요." });
+        window.history.replaceState({}, "", "/admin/events");
+      } else if (params.get("drive_error")) {
+        setDriveMessage({ type: "error", text: `Drive 연결 실패: ${params.get("drive_error")}` });
+        window.history.replaceState({}, "", "/admin/events");
+      }
+    }
+  }, []);
+
+  async function saveParentFolder() {
+    setParentFolderSaving(true);
+    setDriveMessage(null);
+    try {
+      const res = await fetch("/api/auth/drive/status", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ parentFolderId: parentFolderInput }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setDriveMessage({ type: "error", text: data.error ?? "저장 실패" });
+      } else {
+        setDriveMessage({ type: "success", text: "부모 폴더가 저장되었습니다." });
+        loadDriveStatus();
+      }
+    } finally {
+      setParentFolderSaving(false);
+    }
+  }
+
+  async function disconnectDrive() {
+    if (!confirm("Drive 연결을 끊겠습니까? 기존에 업로드된 사진은 그대로 유지됩니다.")) return;
+    await fetch("/api/auth/drive/status", { method: "DELETE" });
+    loadDriveStatus();
+    setDriveMessage({ type: "success", text: "Drive 연결이 해제되었습니다." });
+  }
 
   function reset() {
     setTitle(""); setDate(""); setDescription(""); setCoverImage("");
@@ -94,18 +149,28 @@ export default function AdminEventsPage() {
     load();
   }
 
-  async function uploadPhotos(files: FileList) {
+  const [uploadProgress, setUploadProgress] = useState<{ done: number; total: number } | null>(null);
+  async function uploadPhotos(files: FileList | File[]) {
     if (!selectedEvent) return;
+    const arr = Array.from(files);
     setPhotoUploading(true);
-    for (const file of Array.from(files)) {
-      const form = new FormData(); form.append("file", file);
-      await fetch(`/api/events/${selectedEvent.id}/photos`, { method: "POST", body: form });
+    setUploadProgress({ done: 0, total: arr.length });
+    let failed = 0;
+    for (let i = 0; i < arr.length; i++) {
+      const form = new FormData(); form.append("file", arr[i]);
+      const res = await fetch(`/api/events/${selectedEvent.id}/photos`, { method: "POST", body: form });
+      if (!res.ok) failed++;
+      setUploadProgress({ done: i + 1, total: arr.length });
     }
     const updated = await fetch(`/api/events/${selectedEvent.id}`).then(r => r.json());
     setSelectedEvent(updated);
     load();
     setPhotoUploading(false);
+    setUploadProgress(null);
     if (photoInputRef.current) photoInputRef.current.value = "";
+    if (failed > 0) {
+      setDriveMessage({ type: "error", text: `${arr.length - failed}장 업로드 완료, ${failed}장 실패` });
+    }
   }
 
   async function deletePhoto(photoId: number) {
@@ -226,31 +291,86 @@ export default function AdminEventsPage() {
         <h1 className="text-2xl font-bold">행사 관리</h1>
       </div>
 
-      {/* Google Drive 폴더 일괄 등록 */}
+      {/* Google Drive 자동 연동 */}
       <Card className="mb-6 border-blue-500/30 bg-blue-500/5">
         <CardHeader>
           <CardTitle className="text-base flex items-center gap-2">
             <FolderSync className="h-4 w-4 text-blue-500" />
-            Google Drive 폴더로 일괄 등록
+            Google Drive 자동 연동
+            {driveStatus?.connected && (
+              <Badge variant="outline" className="text-xs gap-1 border-green-500/40 text-green-700 dark:text-green-400">
+                <Check className="h-3 w-3" />연결됨
+              </Badge>
+            )}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            폴더명은 <code className="px-1 py-0.5 rounded bg-muted">YYYY-MM-DD-행사명</code> 형식 (예: <code className="px-1 py-0.5 rounded bg-muted">2026-05-10-신입생 환영회</code>).
-            <br />폴더 공유 설정을 <strong>&quot;링크가 있는 모든 사용자가 보기&quot;</strong>로 변경한 뒤 URL을 붙여넣어 주세요.
-          </p>
-          <div className="flex gap-2">
-            <Input
-              value={driveFolderUrl}
-              onChange={(e) => setDriveFolderUrl(e.target.value)}
-              placeholder="https://drive.google.com/drive/folders/..."
-              className="flex-1 text-xs"
-              disabled={driveSyncing}
-            />
-            <Button onClick={handleDriveSync} disabled={driveSyncing || !driveFolderUrl.trim()} className="gap-2">
-              {driveSyncing ? <><Loader2 className="h-4 w-4 animate-spin" />동기화 중...</> : <><FolderSync className="h-4 w-4" />동기화</>}
-            </Button>
-          </div>
+          {!driveStatus?.connected ? (
+            <>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                Drive 를 한 번만 연결하면 이후 행사 추가·사진 업로드가 자동으로 Drive 에 반영됩니다.
+                폴더와 파일을 직접 만들 필요가 없습니다.
+              </p>
+              <Button onClick={() => { window.location.href = "/api/auth/drive/connect"; }} className="gap-2">
+                <Link2 className="h-4 w-4" />Drive 연결하기
+              </Button>
+            </>
+          ) : (
+            <>
+              <p className="text-xs text-muted-foreground leading-relaxed">
+                연결 계정: <strong>{driveStatus.email ?? "(미확인)"}</strong>
+                <br />
+                <span className="text-muted-foreground">행사를 추가하면 부모 폴더 안에 <code className="px-1 py-0.5 rounded bg-muted">YYYY-MM-DD-행사명</code> 폴더가 자동으로 만들어지고, 사진 업로드 시 그 안으로 직접 올라갑니다.</span>
+              </p>
+              <div className="space-y-1">
+                <Label className="text-xs">부모 폴더 (예: 학생회 사이트 DB &gt; 갤러리)</Label>
+                <div className="flex gap-2">
+                  <Input
+                    value={parentFolderInput}
+                    onChange={(e) => setParentFolderInput(e.target.value)}
+                    placeholder="https://drive.google.com/drive/folders/... 또는 폴더 ID"
+                    className="flex-1 text-xs"
+                    disabled={parentFolderSaving}
+                  />
+                  <Button onClick={saveParentFolder} disabled={parentFolderSaving} size="sm" className="gap-2">
+                    {parentFolderSaving ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4" />}
+                    저장
+                  </Button>
+                </div>
+                {driveStatus.parentFolderId && (
+                  <p className="text-[10px] text-muted-foreground">현재 ID: <code>{driveStatus.parentFolderId}</code></p>
+                )}
+              </div>
+              <div className="flex gap-2 pt-1">
+                <Button variant="outline" size="sm" onClick={disconnectDrive} className="gap-2 text-destructive">
+                  <Unplug className="h-3.5 w-3.5" />연결 해제
+                </Button>
+                <Button variant="ghost" size="sm" onClick={() => { window.location.href = "/api/auth/drive/connect"; }} className="gap-2 text-xs">
+                  재인증
+                </Button>
+              </div>
+            </>
+          )}
+
+          <details className="text-xs text-muted-foreground border-t pt-2">
+            <summary className="cursor-pointer hover:text-foreground">기존 Drive 폴더 일괄 가져오기 (선택)</summary>
+            <div className="space-y-2 pt-2">
+              <p className="text-[11px]">이미 Drive 에 있는 <code className="px-1 py-0.5 rounded bg-muted">YYYY-MM-DD-행사명</code> 폴더를 한 번에 가져옵니다 (공개 폴더만).</p>
+              <div className="flex gap-2">
+                <Input
+                  value={driveFolderUrl}
+                  onChange={(e) => setDriveFolderUrl(e.target.value)}
+                  placeholder="https://drive.google.com/drive/folders/..."
+                  className="flex-1 text-xs"
+                  disabled={driveSyncing}
+                />
+                <Button onClick={handleDriveSync} disabled={driveSyncing || !driveFolderUrl.trim()} size="sm">
+                  {driveSyncing ? <Loader2 className="h-4 w-4 animate-spin" /> : "가져오기"}
+                </Button>
+              </div>
+            </div>
+          </details>
+
           {driveMessage && (
             <Alert variant={driveMessage.type === "error" ? "destructive" : "default"}>
               <AlertDescription className="text-xs">{driveMessage.text}</AlertDescription>
@@ -328,6 +448,33 @@ export default function AdminEventsPage() {
                 className="aspect-square rounded-xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-1 text-muted-foreground hover:border-primary hover:text-primary transition-colors">
                 {photoUploading ? <Loader2 className="h-6 w-6 animate-spin" /> : <><Upload className="h-6 w-6" /><span className="text-xs">업로드</span></>}
               </button>
+            </div>
+            <div
+              onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+              onDragLeave={() => setDragOver(false)}
+              onDrop={(e) => {
+                e.preventDefault();
+                setDragOver(false);
+                const files = Array.from(e.dataTransfer.files).filter(f => f.type.startsWith("image/"));
+                if (files.length) uploadPhotos(files);
+              }}
+              className={`rounded-xl border-2 border-dashed p-6 text-center text-sm transition-colors ${
+                dragOver ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground"
+              }`}
+            >
+              {photoUploading && uploadProgress ? (
+                <span className="flex items-center justify-center gap-2">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  업로드 중... {uploadProgress.done}/{uploadProgress.total}
+                </span>
+              ) : (
+                <>
+                  📥 여기에 사진을 드래그하거나 위 <Upload className="inline h-3.5 w-3.5" /> 버튼으로 선택하세요
+                  {selectedEvent.driveFolderId && (
+                    <span className="block text-[11px] mt-1 text-blue-600 dark:text-blue-400">→ Google Drive 행사 폴더로 자동 업로드됩니다</span>
+                  )}
+                </>
+              )}
             </div>
             <input ref={photoInputRef} type="file" accept="image/*" multiple className="hidden"
               onChange={(e) => { const files = e.target.files; if (files?.length) uploadPhotos(files); }} />

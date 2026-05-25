@@ -144,6 +144,17 @@ model BuildingFloor {
   @@unique([buildingId, level])
 }
 
+// Google Drive OAuth 연결 정보 (단일 행 — id 1 고정)
+// 사이트가 사용자 본인 Drive 에 행사 폴더/사진을 자동 생성·업로드하기 위한 refresh token 보관소
+model DriveAuth {
+  id             Int      @id @default(1)
+  refreshToken   String
+  parentFolderId String?  // 기본 부모 폴더(예: "학생회 사이트 DB > 갤러리") ID
+  scope          String
+  email          String?  // 인증한 계정 이메일 (참고용)
+  updatedAt      DateTime @updatedAt
+}
+
 // 교수님 오피스 정보
 model Professor {
   id           Int            @id @default(autoincrement())
