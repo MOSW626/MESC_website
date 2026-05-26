@@ -42,6 +42,7 @@ export default function AdminEventsPage() {
   const [parentFolderInput, setParentFolderInput] = useState("");
   const [parentFolderSaving, setParentFolderSaving] = useState(false);
   const [dragOver, setDragOver] = useState(false);
+  const [driveCardOpen, setDriveCardOpen] = useState(false);
   const formRef = useRef<HTMLDivElement>(null);
   const photoInputRef = useRef<HTMLInputElement>(null);
   const coverInputRef = useRef<HTMLInputElement>(null);
@@ -57,6 +58,8 @@ export default function AdminEventsPage() {
       const data = await res.json();
       setDriveStatus(data);
       setParentFolderInput(data.parentFolderId ?? "");
+      // 미연결이거나 부모 폴더 설정 안 됐으면 자동 펼침 (설정 유도)
+      if (!data.connected || !data.parentFolderId) setDriveCardOpen(true);
     }
   }
 
@@ -293,17 +296,27 @@ export default function AdminEventsPage() {
 
       {/* Google Drive 자동 연동 */}
       <Card className="mb-6 border-blue-500/30 bg-blue-500/5">
-        <CardHeader>
-          <CardTitle className="text-base flex items-center gap-2">
-            <FolderSync className="h-4 w-4 text-blue-500" />
-            Google Drive 자동 연동
-            {driveStatus?.connected && (
-              <Badge variant="outline" className="text-xs gap-1 border-green-500/40 text-green-700 dark:text-green-400">
-                <Check className="h-3 w-3" />연결됨
-              </Badge>
-            )}
+        <CardHeader
+          className="cursor-pointer select-none"
+          onClick={() => setDriveCardOpen((v) => !v)}
+        >
+          <CardTitle className="text-base flex items-center justify-between gap-2">
+            <span className="flex items-center gap-2">
+              <FolderSync className="h-4 w-4 text-blue-500" />
+              Google Drive 자동 연동
+              {driveStatus?.connected && (
+                <Badge variant="outline" className="text-xs gap-1 border-green-500/40 text-green-700 dark:text-green-400">
+                  <Check className="h-3 w-3" />연결됨
+                </Badge>
+              )}
+              {driveStatus?.connected && driveStatus.parentFolderId && !driveCardOpen && (
+                <span className="text-xs text-muted-foreground font-normal">— 사이트에서 행사·사진을 올리면 자동으로 Drive 에 반영됩니다</span>
+              )}
+            </span>
+            <span className="text-xs text-muted-foreground font-normal">{driveCardOpen ? "▲" : "▼"}</span>
           </CardTitle>
         </CardHeader>
+        {driveCardOpen && (
         <CardContent className="space-y-3">
           {!driveStatus?.connected ? (
             <>
@@ -377,6 +390,7 @@ export default function AdminEventsPage() {
             </Alert>
           )}
         </CardContent>
+        )}
       </Card>
 
       <div ref={formRef}>

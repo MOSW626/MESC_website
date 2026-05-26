@@ -26,10 +26,17 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   if (file.size > MAX_SIZE) return NextResponse.json({ error: "파일 크기는 25MB 이하여야 합니다." }, { status: 400 });
 
   // 행사가 Drive 폴더와 연결돼 있으면 Drive 로 업로드, 아니면 Vercel Blob 으로 fallback
-  const event = await prisma.event.findUnique({ where: { id }, select: { driveFolderId: true } });
+  const event = await prisma.event.findUnique({
+    where: { id },
+    select: { driveFolderId: true, coverImage: true },
+  });
   if (!event) return NextResponse.json({ error: "행사를 찾을 수 없습니다." }, { status: 404 });
 
   const existingCount = await prisma.eventPhoto.count({ where: { eventId: id } });
+  const isFirstPhoto = existingCount === 0;
+
+  let imageUrl: string;
+  let extra: { source: string; driveFileId?: string };
 
   if (event.driveFolderId) {
     const tok = await getAccessTokenOrNull();
@@ -42,33 +49,30 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const uploaded = await uploadFile(tok.accessToken, file, event.driveFolderId);
     // 폴더가 이미 public 이라 파일은 자동 상속. 안전을 위해 한 번 더 명시.
     await makePublic(tok.accessToken, uploaded.id).catch(() => {});
-
-    const photo = await prisma.eventPhoto.create({
-      data: {
-        eventId: id,
-        imageUrl: driveImageUrl(uploaded.id),
-        caption: caption ?? file.name,
-        order: existingCount,
-        source: "drive",
-        driveFileId: uploaded.id,
-      },
-    });
-    return NextResponse.json(photo, { status: 201 });
+    imageUrl = driveImageUrl(uploaded.id);
+    extra = { source: "drive", driveFileId: uploaded.id };
+  } else {
+    const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
+    const blob = await put(`events/${id}/${Date.now()}-${safeName}`, file, { access: "public" });
+    imageUrl = blob.url;
+    extra = { source: "blob" };
   }
-
-  // Drive 미연결 또는 행사 폴더 없음 → 기존 Vercel Blob 방식
-  const safeName = file.name.replace(/[^a-zA-Z0-9._-]/g, "_");
-  const blob = await put(`events/${id}/${Date.now()}-${safeName}`, file, { access: "public" });
 
   const photo = await prisma.eventPhoto.create({
     data: {
       eventId: id,
-      imageUrl: blob.url,
-      caption: caption ?? null,
+      imageUrl,
+      caption: caption ?? (extra.source === "drive" ? file.name : null),
       order: existingCount,
-      source: "blob",
+      ...extra,
     },
   });
+
+  // 첫 사진이고 대표 사진이 비어있으면 자동으로 대표 사진 설정
+  if (isFirstPhoto && !event.coverImage) {
+    await prisma.event.update({ where: { id }, data: { coverImage: imageUrl } });
+  }
+
   return NextResponse.json(photo, { status: 201 });
 }
 
