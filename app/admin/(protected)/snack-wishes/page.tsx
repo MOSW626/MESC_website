@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Cookie } from "lucide-react";
+import { AdminGuide } from "@/components/admin-guide";
 
 interface SnackWish {
   id: number;
@@ -49,6 +50,14 @@ export default function AdminSnackWishesPage() {
         <a href="/admin" className="text-sm text-muted-foreground hover:text-foreground">← 대시보드</a>
         <h1 className="text-2xl font-bold">간식 위시리스트 관리</h1>
       </div>
+
+      <AdminGuide id="snack-wishes" title="간식 위시리스트 관리 사용법">
+        <ol className="list-decimal pl-5 space-y-1">
+          <li>학생들이 공개 페이지(/check-fee 또는 학생회 안내)에서 제출한 간식 요청이 여기 모입니다 — <strong>읽기 + 삭제</strong> 전용입니다.</li>
+          <li>구매·반영한 항목은 개별 <strong>삭제</strong>로 제거하세요.</li>
+          <li>한 학기 단위로 정리할 때는 우측 상단 <strong>전체 삭제</strong> 사용.</li>
+        </ol>
+      </AdminGuide>
 
       <div className="flex items-center justify-between mb-4">
         <p className="text-sm text-muted-foreground">총 {wishes.length}개</p>

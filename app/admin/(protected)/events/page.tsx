@@ -10,6 +10,7 @@ import { Badge } from "@/components/ui/badge";
 import { Camera, Check, Download, FolderSync, Link2, Loader2, MessageSquare, RefreshCw, Star, Unplug, Upload, X } from "lucide-react";
 import Image from "next/image";
 import JSZip from "jszip";
+import { AdminGuide } from "@/components/admin-guide";
 
 interface EventPhoto { id: number; imageUrl: string; caption: string | null; source?: string; driveFileId?: string | null; }
 interface Feedback { id: number; content: string; rating: number; createdAt: string; }
@@ -293,6 +294,19 @@ export default function AdminEventsPage() {
         <a href="/admin" className="text-sm text-muted-foreground hover:text-foreground">← 대시보드</a>
         <h1 className="text-2xl font-bold">행사 관리</h1>
       </div>
+
+      <AdminGuide id="events" title="행사 관리 사용법">
+        <ol className="list-decimal pl-5 space-y-1">
+          <li><strong>새 행사 추가</strong>: 행사명 + 날짜만 입력하고 <strong>행사 추가</strong> 클릭. 대표 사진은 비워둬도 OK (첫 업로드 사진이 자동 대표).</li>
+          <li>그 순간 Google Drive 의 <code className="px-1 rounded bg-muted">학생회 사이트 DB &gt; 갤러리</code> 안에 <code className="px-1 rounded bg-muted">YYYY-MM-DD-행사명</code> 폴더가 자동 생성됩니다.</li>
+          <li>행사 카드 옆 <strong>사진</strong> 버튼 → 드롭존에 사진을 드래그하거나 업로드 버튼 클릭 → 모든 사진이 Drive 행사 폴더로 자동 업로드됩니다.</li>
+          <li>피드백/사진/수정/삭제 버튼으로 각 행사를 개별 관리할 수 있습니다.</li>
+        </ol>
+        <p className="text-xs">
+          💡 <strong>재동기화</strong> 버튼은 누군가 Drive 에서 직접 사진을 추가/삭제했을 때만 사용. 평소에는 누를 일이 없습니다.<br />
+          💡 Drive 자동 연동 카드는 평소 접어두고, 부모 폴더 변경이 필요할 때만 펼치세요.
+        </p>
+      </AdminGuide>
 
       {/* Google Drive 자동 연동 */}
       <Card className="mb-6 border-blue-500/30 bg-blue-500/5">

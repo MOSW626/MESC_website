@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
 import Image from "next/image";
+import { AdminGuide } from "@/components/admin-guide";
 import { Loader2, Upload } from "lucide-react";
 
 interface Member {
@@ -128,6 +129,15 @@ export default function AdminMembersPage() {
         <a href="/admin" className="text-sm text-muted-foreground hover:text-foreground">← 대시보드</a>
         <h1 className="text-2xl font-bold">학생회 멤버 관리</h1>
       </div>
+
+      <AdminGuide id="members" title="멤버 관리 사용법">
+        <ol className="list-decimal pl-5 space-y-1">
+          <li>이름 / 직위(예: 회장, 부회장, 기획국장) / 소속 국(기획·홍보·학술 등)을 입력합니다.</li>
+          <li>프로필 사진은 파일을 업로드하거나 URL을 붙여넣어 사용 — 정사각형 이미지가 깔끔하게 원형으로 표시됩니다.</li>
+          <li><strong>회장단</strong> 체크 시 공개 페이지(/members)에서 별도 회장단 섹션에 같이 표시됩니다.</li>
+          <li>순서 값으로 각 국 안에서의 노출 순서를 조절합니다.</li>
+        </ol>
+      </AdminGuide>
 
       <div ref={formRef}>
         <Card className="mb-8">

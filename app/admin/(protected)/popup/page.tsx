@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Badge } from "@/components/ui/badge";
+import { AdminGuide } from "@/components/admin-guide";
 import { ExternalLink, Plus, Trash2 } from "lucide-react";
 
 interface PopupLink {
@@ -140,6 +141,16 @@ export default function AdminPopupPage() {
         <a href="/admin" className="text-sm text-muted-foreground hover:text-foreground">← 대시보드</a>
         <h1 className="text-2xl font-bold">홈화면 팝업 관리</h1>
       </div>
+
+      <AdminGuide id="popup" title="홈화면 팝업 사용법">
+        <ol className="list-decimal pl-5 space-y-1">
+          <li><strong>활성화 토글</strong>을 ON 으로 하면 홈페이지 방문자에게 팝업이 표시됩니다. "오늘 그만 보기" 누른 사용자에게는 24시간 동안 안 보임.</li>
+          <li>팝업 <strong>제목</strong>과 <strong>메시지</strong>를 입력하고 저장.</li>
+          <li>그 아래 <strong>링크 추가</strong>에서 라벨(한/영) · URL · 이모지 아이콘을 입력해 버튼을 만듭니다.</li>
+          <li>각 링크는 ↑↓ 로 순서 변경, ON/OFF 토글로 임시 비활성화 가능.</li>
+        </ol>
+        <p className="text-xs">💡 행사 신청 폼, 설문조사 링크 등 시즌별 안내에 적합합니다. 끝나면 활성화 OFF.</p>
+      </AdminGuide>
 
       {/* 팝업 ON/OFF + 제목/메시지 */}
       <Card className="mb-8">

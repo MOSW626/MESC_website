@@ -7,6 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AdminGuide } from "@/components/admin-guide";
 
 interface BudgetItem {
   id: number;
@@ -65,6 +66,15 @@ export default function AdminBudgetPage() {
         <a href="/admin" className="text-sm text-muted-foreground hover:text-foreground">← 대시보드</a>
         <h1 className="text-2xl font-bold">예산 관리</h1>
       </div>
+
+      <AdminGuide id="budget" title="예산 관리 사용법">
+        <ol className="list-decimal pl-5 space-y-1">
+          <li>날짜 / 내역 / 금액 / 유형(수입·지출) / 카테고리(학생회비·행사·물품·식비·기타)를 입력해 항목을 추가합니다.</li>
+          <li>영수증 URL은 선택 — Google Drive 공유 링크나 이미지 호스팅 URL을 붙여넣어 두면 공개 페이지(/budget)에서 영수증 보기가 동작합니다.</li>
+          <li>항목별 <strong>삭제</strong> 버튼으로 개별 정리 가능.</li>
+        </ol>
+        <p className="text-xs">💡 금액은 자동으로 ₩ 포맷으로 표시되며, 수입은 +, 지출은 - 로 합산됩니다.</p>
+      </AdminGuide>
 
       <Card className="mb-8">
         <CardHeader>

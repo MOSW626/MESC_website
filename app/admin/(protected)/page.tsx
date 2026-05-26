@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { auth, signOut } from "@/lib/auth";
 import { Settings, Bell, BookOpen, Users, Home, ExternalLink, ShieldCheck, LogOut, GraduationCap, Camera, Cookie, Megaphone, Building2, UserSquare } from "lucide-react";
+import { AdminGuide } from "@/components/admin-guide";
 
 export default async function AdminPage() {
   const session = await auth();
@@ -114,12 +115,22 @@ export default async function AdminPage() {
 
       <div className="container mx-auto px-4 py-10 max-w-4xl">
         {/* Welcome */}
-        <div className="mb-10">
+        <div className="mb-6">
           <h1 className="text-3xl font-black tracking-tight">대시보드</h1>
           <p className="text-muted-foreground mt-1">
             안녕하세요, <span className="font-semibold text-foreground">{session?.user?.name ?? "관리자"}</span>님. 오늘도 투명한 학생회 운영 화이팅!
           </p>
         </div>
+
+        <AdminGuide id="dashboard" title="관리자 시스템 안내">
+          <p>아래 카드 중 작업할 영역을 선택하세요. 각 페이지 상단에 그 페이지의 자세한 사용법이 안내되어 있고, 한 번 읽고 접어두면 다음 방문 시 접힌 상태로 표시됩니다.</p>
+          <ul className="list-disc pl-5 space-y-0.5">
+            <li><strong>공지사항·공지/행사/학사</strong> 카테고리로 분류해서 발행 (상단 고정 가능).</li>
+            <li><strong>행사 관리</strong> — 사이트에서 행사를 만들면 Google Drive 에 폴더가 자동으로 만들어지고 사진은 드래그앤드롭으로 Drive 에 직접 올라갑니다.</li>
+            <li><strong>예산·간식 위시·팝업</strong> 같은 일상 관리 + <strong>건물·교수·수업·학습자료·멤버</strong> 같은 기준 데이터 관리.</li>
+          </ul>
+          <p className="text-xs">💡 공용 컴퓨터에서 작업했다면 우상단 <strong>로그아웃</strong> 잊지 마세요. 세션은 자동 만료되지만 안전을 위해 권장합니다.</p>
+        </AdminGuide>
 
         {/* Management Cards */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-10">

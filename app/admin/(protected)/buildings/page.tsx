@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Building2, Loader2, Plus, Trash2, Upload } from "lucide-react";
+import { AdminGuide } from "@/components/admin-guide";
 
 interface Floor {
   id: number;
@@ -139,6 +140,15 @@ export default function AdminBuildingsPage() {
         <a href="/admin" className="text-sm text-muted-foreground hover:text-foreground">← 대시보드</a>
         <h1 className="text-2xl font-bold">건물·평면도 관리</h1>
       </div>
+
+      <AdminGuide id="buildings" title="건물·평면도 관리 사용법">
+        <ol className="list-decimal pl-5 space-y-1">
+          <li><strong>건물 추가</strong>: 코드(예: N7), 한글·영문명, 설명을 입력합니다.</li>
+          <li>건물 카드를 펼쳐 <strong>층 추가</strong>: 층 번호, 통로 안내, 평면도 이미지(파일 업로드 또는 URL).</li>
+          <li>여기서 입력한 건물·층 정보는 <strong>교수님 관리</strong> 페이지에서 호실 지정 시 사용됩니다.</li>
+        </ol>
+        <p className="text-xs">💡 평면도 이미지는 PNG/JPG 권장. 공개 페이지(/department-info)의 학과 안내 섹션에서 노출됩니다.</p>
+      </AdminGuide>
 
       {/* 건물 추가/수정 폼 */}
       <div ref={formRef}>

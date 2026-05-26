@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AdminGuide } from "@/components/admin-guide";
 
 interface Resource {
   id: number;
@@ -98,6 +99,15 @@ export default function AdminResourcesPage() {
         <a href="/admin" className="text-sm text-muted-foreground hover:text-foreground">← 대시보드</a>
         <h1 className="text-2xl font-bold">학습자료 관리</h1>
       </div>
+
+      <AdminGuide id="resources" title="학습자료 관리 사용법">
+        <ol className="list-decimal pl-5 space-y-1">
+          <li>제목 / 파일 URL / 카테고리(200·300·400·기타)를 입력해 자료를 등록합니다.</li>
+          <li>파일 URL은 Google Drive · Dropbox · OneDrive 등 <strong>공유 링크</strong>를 그대로 붙여넣어 사용 (사이트가 파일을 직접 저장하지 않음).</li>
+          <li>연결할 과목(수업 정보 관리에서 등록된 것) 을 선택하면 해당 과목 페이지에 자동 노출됩니다.</li>
+        </ol>
+        <p className="text-xs">💡 Drive 파일은 "링크가 있는 모든 사용자가 보기"로 공유해야 학생들이 접근할 수 있습니다.</p>
+      </AdminGuide>
 
       <div ref={formRef}>
         <Card className="mb-8">

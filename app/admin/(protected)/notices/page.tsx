@@ -8,6 +8,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { AdminGuide } from "@/components/admin-guide";
 
 interface Notice {
   id: number;
@@ -85,6 +86,15 @@ export default function AdminNoticesPage() {
         <a href="/admin" className="text-sm text-muted-foreground hover:text-foreground">← 대시보드</a>
         <h1 className="text-2xl font-bold">공지사항 관리</h1>
       </div>
+
+      <AdminGuide id="notices" title="공지사항 관리 사용법">
+        <ol className="list-decimal pl-5 space-y-1">
+          <li><strong>새 공지 작성</strong>: 제목·내용을 입력하고 카테고리(공지/행사/학사)를 선택하세요.</li>
+          <li><strong>상단 고정</strong>을 체크하면 공개 페이지(/notices)에서 가장 위에 노출됩니다.</li>
+          <li>등록 후에는 카드의 <strong>수정/삭제</strong> 버튼으로 관리합니다.</li>
+        </ol>
+        <p className="text-xs">💡 내용은 마크다운 형식이 아닌 일반 텍스트로 저장됩니다 — 줄바꿈은 그대로 반영됩니다.</p>
+      </AdminGuide>
 
       <div ref={formRef}>
         <Card className="mb-8">

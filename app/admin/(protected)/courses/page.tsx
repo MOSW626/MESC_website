@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Checkbox } from "@/components/ui/checkbox";
+import { AdminGuide } from "@/components/admin-guide";
 import { Badge } from "@/components/ui/badge";
 import { Youtube, BookMarked, BookOpen } from "lucide-react";
 
@@ -89,6 +90,16 @@ export default function AdminCoursesPage() {
         <a href="/admin" className="text-sm text-muted-foreground hover:text-foreground">← 대시보드</a>
         <h1 className="text-2xl font-bold">수업 정보 관리</h1>
       </div>
+
+      <AdminGuide id="courses" title="수업 정보 관리 사용법">
+        <ol className="list-decimal pl-5 space-y-1">
+          <li>과목 코드(예: ME200) / 이름 / 레벨(200·300·400·기타)을 입력합니다.</li>
+          <li>전공서가 있다면 책 이름을 적고, <strong>학생회 보유 여부</strong> 체크 시 공개 페이지에서 "대여 가능" 배지로 표시됩니다.</li>
+          <li><strong>YouTube URL</strong>(강의 영상)을 넣으면 학생들이 바로 시청할 수 있습니다.</li>
+          <li>순서 값으로 공개 페이지에서의 표시 순서를 조절합니다.</li>
+        </ol>
+        <p className="text-xs">💡 학습자료 페이지에서 자료를 등록할 때 여기 등록된 과목과 연결할 수 있습니다.</p>
+      </AdminGuide>
 
       <div ref={formRef}>
         <Card className="mb-8">

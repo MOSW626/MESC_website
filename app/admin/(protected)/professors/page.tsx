@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Loader2, Upload, User } from "lucide-react";
 import Image from "next/image";
+import { AdminGuide } from "@/components/admin-guide";
 
 interface Professor {
   id: number;
@@ -152,6 +153,16 @@ export default function AdminProfessorsPage() {
         <a href="/admin" className="text-sm text-muted-foreground hover:text-foreground">← 대시보드</a>
         <h1 className="text-2xl font-bold">교수님 관리</h1>
       </div>
+
+      <AdminGuide id="professors" title="교수님 관리 사용법">
+        <ol className="list-decimal pl-5 space-y-1">
+          <li>이름 / 영문명 / 직위(교수·부교수·조교수 등) / 호실을 입력합니다.</li>
+          <li><strong>건물</strong>을 먼저 선택하면 그 건물의 <strong>층</strong> 목록이 자동으로 채워집니다 (건물·평면도 관리에서 등록한 데이터 사용).</li>
+          <li>이메일, 전화, 연구 분야, 웹사이트 URL, 프로필 사진은 모두 선택 입력.</li>
+          <li>상단 검색창에서 이름으로 빠르게 찾을 수 있습니다.</li>
+        </ol>
+        <p className="text-xs">💡 건물·층 정보가 없으면 먼저 <strong>건물·평면도 관리</strong>에서 등록하세요.</p>
+      </AdminGuide>
 
       <div ref={formRef}>
         <Card className="mb-8">
