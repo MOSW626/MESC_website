@@ -104,7 +104,7 @@ export function PostsTab() {
               maxLength={5000}
             />
             <p className="text-xs text-muted-foreground">
-              💡 작성하면 IP 당 5분 간격 제한. 신고 5건 누적 시 자동 숨김. 욕설·신상정보 포함 글은 거부됩니다.
+              💡 1분에 3건까지 작성 가능. 신고 5건 누적 시 자동 숨김. 욕설·신상정보 포함 글은 거부됩니다.
             </p>
             <Button onClick={submit} disabled={submitting || !title.trim() || !content.trim()} className="w-full">
               {submitting ? "게시 중..." : "익명으로 게시"}

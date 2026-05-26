@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/lib/auth";
 import { ensureSubfolder, getAccessTokenOrNull, uploadFile, makePublic, DriveOAuthError } from "@/lib/drive-oauth";
+import { resourceFilename } from "@/lib/filename";
 
 const MAX_SIZE = 100 * 1024 * 1024; // 100MB — PDF 강의자료 등
 
@@ -26,7 +27,10 @@ export async function POST(req: Request) {
     const resourcesFolderId = await ensureSubfolder(tok.accessToken, tok.auth.parentFolderId, "학습자료");
     const courseFolderId = await ensureSubfolder(tok.accessToken, resourcesFolderId, courseCode);
 
-    const uploaded = await uploadFile(tok.accessToken, file, courseFolderId);
+    // 파일명 자동 변환: "[과목코드] 원본명.확장자"
+    const newName = resourceFilename(courseCode, file.name);
+    const renamed = new File([await file.arrayBuffer()], newName, { type: file.type });
+    const uploaded = await uploadFile(tok.accessToken, renamed, courseFolderId);
     await makePublic(tok.accessToken, uploaded.id).catch(() => {});
 
     // Drive 공유 링크 — 일반 파일 보기용

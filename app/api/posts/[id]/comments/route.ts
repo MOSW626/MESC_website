@@ -12,8 +12,8 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   if (!postId) return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
 
   const ip = getClientIp(req);
-  // 댓글은 좀 더 관대 — 1분에 3건
-  const rl = enforce(ip, "comments", 3, 60 * 1000);
+  // 댓글은 관대 — 1분에 10건
+  const rl = enforce(ip, "comments", 10, 60 * 1000);
   if (!rl.ok) {
     return NextResponse.json(
       { error: `너무 자주 작성하셨습니다. ${Math.ceil(rl.retryAfter / 1000)}초 후 다시 시도해주세요.` },

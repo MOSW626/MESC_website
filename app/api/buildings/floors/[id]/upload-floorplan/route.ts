@@ -4,8 +4,9 @@ import { auth } from "@/lib/auth";
 import { parseId } from "@/lib/validation";
 import { ensureSubfolder, getAccessTokenOrNull, uploadFile, makePublic, DriveOAuthError } from "@/lib/drive-oauth";
 import { driveImageUrl } from "@/lib/drive";
+import { floorplanFilename } from "@/lib/filename";
 
-const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp"];
+const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/webp", "application/pdf"];
 const MAX_SIZE = 30 * 1024 * 1024; // 30MB — 평면도는 큼
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
@@ -19,7 +20,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const formData = await req.formData();
   const file = formData.get("file") as File | null;
   if (!file) return NextResponse.json({ error: "파일이 없습니다." }, { status: 400 });
-  if (!ALLOWED_TYPES.includes(file.type)) return NextResponse.json({ error: "PNG/JPEG/WebP 만 지원합니다." }, { status: 400 });
+  if (!ALLOWED_TYPES.includes(file.type)) return NextResponse.json({ error: "PNG/JPEG/WebP/PDF 만 지원합니다." }, { status: 400 });
   if (file.size > MAX_SIZE) return NextResponse.json({ error: "파일 크기는 30MB 이하여야 합니다." }, { status: 400 });
 
   const floor = await prisma.buildingFloor.findUnique({
@@ -41,15 +42,21 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     const floorplansFolderId = await ensureSubfolder(tok.accessToken, tok.auth.parentFolderId, "평면도");
     const buildingFolderId = await ensureSubfolder(tok.accessToken, floorplansFolderId, floor.building.code);
 
-    const safeName = `${floor.building.code}-${floor.level}F-${Date.now()}.${file.type.split("/")[1]}`;
+    const safeName = floorplanFilename(floor.building.code, floor.level, file.name);
     const renamed = new File([await file.arrayBuffer()], safeName, { type: file.type });
     const uploaded = await uploadFile(tok.accessToken, renamed, buildingFolderId);
     await makePublic(tok.accessToken, uploaded.id).catch(() => {});
 
+    // PDF 면 Drive thumbnail 엔드포인트 (자동으로 PNG 렌더). 이미지면 기존 lh3 썸네일.
+    const isPdf = file.type === "application/pdf";
+    const imageUrl = isPdf
+      ? `https://drive.google.com/thumbnail?id=${uploaded.id}&sz=w2000`
+      : driveImageUrl(uploaded.id, 2000);
+
     const updated = await prisma.buildingFloor.update({
       where: { id },
       data: {
-        imageUrl: driveImageUrl(uploaded.id, 2000),
+        imageUrl,
         driveFileId: uploaded.id,
       },
     });

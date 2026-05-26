@@ -26,8 +26,8 @@ export async function GET() {
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
-  // 익명 + 공격적: 5분에 1건
-  const rl = enforce(ip, "suggestions", 1, 5 * 60 * 1000);
+  // 1분에 2건 (도배 방지)
+  const rl = enforce(ip, "suggestions", 2, 60 * 1000);
   if (!rl.ok) {
     return NextResponse.json(
       { error: `너무 자주 작성하셨습니다. ${Math.ceil(rl.retryAfter / 1000)}초 후 다시 시도해주세요.` },

@@ -5,6 +5,7 @@ import { put } from "@vercel/blob";
 import { parseId } from "@/lib/validation";
 import { getAccessTokenOrNull, uploadFile, makePublic } from "@/lib/drive-oauth";
 import { driveImageUrl } from "@/lib/drive";
+import { eventPhotoFilename } from "@/lib/filename";
 
 const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp", "image/gif"];
 const MAX_SIZE = 25 * 1024 * 1024; // 25MB (Drive 업로드 고려해 상향)
@@ -28,7 +29,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   // 행사가 Drive 폴더와 연결돼 있으면 Drive 로 업로드, 아니면 Vercel Blob 으로 fallback
   const event = await prisma.event.findUnique({
     where: { id },
-    select: { driveFolderId: true, coverImage: true },
+    select: { driveFolderId: true, coverImage: true, title: true, date: true },
   });
   if (!event) return NextResponse.json({ error: "행사를 찾을 수 없습니다." }, { status: 404 });
 
@@ -46,7 +47,10 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
         { status: 401 },
       );
     }
-    const uploaded = await uploadFile(tok.accessToken, file, event.driveFolderId);
+    // 파일명 자동 변환: "YYYY-MM-DD-행사명 (NNN).ext"
+    const newName = eventPhotoFilename(event.date, event.title, existingCount + 1, file.name);
+    const renamed = new File([await file.arrayBuffer()], newName, { type: file.type });
+    const uploaded = await uploadFile(tok.accessToken, renamed, event.driveFolderId);
     // 폴더가 이미 public 이라 파일은 자동 상속. 안전을 위해 한 번 더 명시.
     await makePublic(tok.accessToken, uploaded.id).catch(() => {});
     imageUrl = driveImageUrl(uploaded.id);

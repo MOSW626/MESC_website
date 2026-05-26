@@ -33,8 +33,8 @@ export async function GET(req: Request) {
 
 export async function POST(req: Request) {
   const ip = getClientIp(req);
-  // 5분에 1건
-  const rl = enforce(ip, "posts", 1, 5 * 60 * 1000);
+  // 1분에 3건
+  const rl = enforce(ip, "posts", 3, 60 * 1000);
   if (!rl.ok) {
     return NextResponse.json(
       { error: `너무 자주 작성하셨습니다. ${Math.ceil(rl.retryAfter / 1000)}초 후 다시 시도해주세요.` },

@@ -156,48 +156,72 @@ export function FloorplanEditor({ floor, professors, onSave }: Props) {
         )}
       </div>
 
-      {/* 우측: 평면도 */}
+      {/* 우측: 평면도 — 배치 모드일 땐 줌/팬 우회 (클릭이 핀 좌표 입력으로) */}
       <div className="rounded-xl overflow-hidden border border-border bg-muted/40 relative" style={{ aspectRatio: aspect }}>
-        <TransformWrapper
-          minScale={0.6}
-          maxScale={5}
-          initialScale={1}
-          centerOnInit
-          // 배치 모드일 때는 panning 끄고 클릭이 좌표 입력으로 가도록
-          panning={{ disabled: placeMode }}
-          doubleClick={{ disabled: placeMode }}
-          wheel={{ step: 0.15 }}
-          pinch={{ step: 5 }}
-        >
-          <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full">
-            <div className="relative w-full h-full">
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                ref={imageRef}
-                src={floor.imageUrl}
-                alt={`${floor.level}층 평면도`}
-                className={`w-full h-full object-contain select-none ${placeMode ? "cursor-crosshair" : ""}`}
-                draggable={false}
-                onClick={handleImageClick}
-              />
-              {placed.map((p) => (
-                <div
-                  key={p.id}
-                  className="absolute -translate-x-1/2 -translate-y-full pointer-events-none"
-                  style={{ left: `${(p.posX ?? 0) * 100}%`, top: `${(p.posY ?? 0) * 100}%` }}
-                >
-                  <MapPin
-                    className={`h-7 w-7 drop-shadow-md ${selectedProfId === p.id ? "text-blue-500" : "text-red-500"}`}
-                    fill="currentColor"
-                  />
-                  <Badge variant="secondary" className="absolute left-1/2 -translate-x-1/2 -top-6 text-[10px] whitespace-nowrap shadow">
-                    {p.name}
-                  </Badge>
-                </div>
-              ))}
-            </div>
-          </TransformComponent>
-        </TransformWrapper>
+        {placeMode ? (
+          <div className="relative w-full h-full">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              ref={imageRef}
+              src={floor.imageUrl}
+              alt={`${floor.level}층 평면도`}
+              className="w-full h-full object-contain select-none cursor-crosshair"
+              draggable={false}
+              onClick={handleImageClick}
+            />
+            {placed.map((p) => (
+              <div
+                key={p.id}
+                className="absolute -translate-x-1/2 -translate-y-full pointer-events-none"
+                style={{ left: `${(p.posX ?? 0) * 100}%`, top: `${(p.posY ?? 0) * 100}%` }}
+              >
+                <MapPin
+                  className={`h-7 w-7 drop-shadow-md ${selectedProfId === p.id ? "text-blue-500" : "text-red-500"}`}
+                  fill="currentColor"
+                />
+                <Badge variant="secondary" className="absolute left-1/2 -translate-x-1/2 -top-6 text-[10px] whitespace-nowrap shadow">
+                  {p.name}
+                </Badge>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <TransformWrapper
+            minScale={0.6}
+            maxScale={5}
+            initialScale={1}
+            centerOnInit
+            wheel={{ step: 0.15 }}
+            pinch={{ step: 5 }}
+          >
+            <TransformComponent wrapperClass="!w-full !h-full" contentClass="!w-full !h-full">
+              <div className="relative w-full h-full">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  src={floor.imageUrl}
+                  alt={`${floor.level}층 평면도`}
+                  className="w-full h-full object-contain select-none pointer-events-none"
+                  draggable={false}
+                />
+                {placed.map((p) => (
+                  <div
+                    key={p.id}
+                    className="absolute -translate-x-1/2 -translate-y-full pointer-events-none"
+                    style={{ left: `${(p.posX ?? 0) * 100}%`, top: `${(p.posY ?? 0) * 100}%` }}
+                  >
+                    <MapPin
+                      className={`h-7 w-7 drop-shadow-md ${selectedProfId === p.id ? "text-blue-500" : "text-red-500"}`}
+                      fill="currentColor"
+                    />
+                    <Badge variant="secondary" className="absolute left-1/2 -translate-x-1/2 -top-6 text-[10px] whitespace-nowrap shadow">
+                      {p.name}
+                    </Badge>
+                  </div>
+                ))}
+              </div>
+            </TransformComponent>
+          </TransformWrapper>
+        )}
       </div>
     </div>
   );

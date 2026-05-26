@@ -26,8 +26,9 @@ export function middleware(req: NextRequest) {
   // 엄격 라우트
   const strict = STRICT_PREFIXES.some((p) => pathname.startsWith(p));
   const bucket = strict ? "api-strict" : "api-default";
-  const max = strict ? 10 : 60;
-  const window = strict ? 5 * 60 * 1000 : 60 * 1000;
+  // 일반 60/분, 엄격(글쓰기·신고) 30/분
+  const max = strict ? 30 : 60;
+  const window = 60 * 1000;
 
   const rl = enforce(ip, bucket, max, window);
   if (!rl.ok) {
