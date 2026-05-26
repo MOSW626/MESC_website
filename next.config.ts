@@ -26,6 +26,8 @@ const nextConfig: NextConfig = {
       {
         source: "/(.*)",
         headers: [
+          // HTTPS 강제 (production 도메인 https 사용 시)
+          { key: "Strict-Transport-Security", value: "max-age=63072000; includeSubDomains; preload" },
           // 클릭재킹 방지: 동일 출처 iframe만 허용
           { key: "X-Frame-Options", value: "SAMEORIGIN" },
           // MIME 스니핑 방지

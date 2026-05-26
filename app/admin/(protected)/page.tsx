@@ -3,7 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { auth, signOut } from "@/lib/auth";
-import { Settings, Bell, BookOpen, Users, Home, ExternalLink, ShieldCheck, LogOut, GraduationCap, Camera, Cookie, Megaphone, Building2, UserSquare } from "lucide-react";
+import { Settings, Bell, BookOpen, Users, Home, ExternalLink, ShieldCheck, LogOut, GraduationCap, Camera, Cookie, Megaphone, Building2, UserSquare, MessageSquare } from "lucide-react";
 import { AdminGuide } from "@/components/admin-guide";
 
 export default async function AdminPage() {
@@ -72,6 +72,13 @@ export default async function AdminPage() {
       icon: UserSquare,
       desc: "교수님 정보·오피스 등록",
       color: "bg-indigo-500/10 text-indigo-600 dark:text-indigo-400 border-indigo-500/20",
+    },
+    {
+      href: "/admin/community",
+      label: "커뮤니티 모더레이션",
+      icon: MessageSquare,
+      desc: "건의 답변·게시글 신고 처리",
+      color: "bg-teal-500/10 text-teal-600 dark:text-teal-400 border-teal-500/20",
     },
   ];
 

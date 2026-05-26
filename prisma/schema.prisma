@@ -140,6 +140,9 @@ model BuildingFloor {
   level       Int
   imageUrl    String?
   description String?
+  width       Int?        // 평면도 픽셀 폭 (좌표 정규화 기준)
+  height      Int?
+  driveFileId String?     // Drive 업로드 시 ID
   professors  Professor[]
   @@unique([buildingId, level])
 }
@@ -172,4 +175,62 @@ model Professor {
   websiteUrl   String?
   imageUrl     String?
   order        Int            @default(0)
+  posX         Float?         // 0~1 정규화 좌표 (평면도 위 핀 위치)
+  posY         Float?
+}
+
+// 익명 건의함
+model Suggestion {
+  id          Int       @id @default(autoincrement())
+  category    String    @default("기타")
+  content     String
+  contactInfo String?
+  response    String?
+  respondedAt DateTime?
+  hidden      Boolean   @default(false)
+  ipHash      String?
+  reportCount Int       @default(0)
+  createdAt   DateTime  @default(now())
+  @@index([hidden, createdAt])
+}
+
+// 익명 자유게시판 게시글
+model Post {
+  id           Int       @id @default(autoincrement())
+  category     String    @default("자유")
+  title        String
+  content      String
+  authorTag    String
+  hidden       Boolean   @default(false)
+  reportCount  Int       @default(0)
+  commentCount Int       @default(0)
+  ipHash       String?
+  createdAt    DateTime  @default(now())
+  comments     Comment[]
+  @@index([hidden, createdAt])
+}
+
+// 게시글 댓글
+model Comment {
+  id          Int      @id @default(autoincrement())
+  postId      Int
+  post        Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
+  content     String
+  authorTag   String
+  hidden      Boolean  @default(false)
+  reportCount Int      @default(0)
+  ipHash      String?
+  createdAt   DateTime @default(now())
+  @@index([postId, hidden, createdAt])
+}
+
+// 신고
+model Report {
+  id         Int      @id @default(autoincrement())
+  targetType String   // "post" | "comment" | "suggestion"
+  targetId   Int
+  reason     String?
+  ipHash     String?
+  createdAt  DateTime @default(now())
+  @@index([targetType, targetId])
 }

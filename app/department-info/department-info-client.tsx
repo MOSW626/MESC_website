@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Building2, Search, MapPin, Mail, Phone, ExternalLink, User } from "lucide-react";
 import { useLanguage } from "@/lib/language-context";
+import { FloorplanViewer } from "@/components/floorplan/floorplan-viewer";
 
 interface Professor {
   id: number;
@@ -31,7 +32,21 @@ interface FloorWithProfs {
   level: number;
   imageUrl: string | null;
   description: string | null;
-  professors: Array<{ id: number; name: string; roomNumber: string | null }>;
+  width: number | null;
+  height: number | null;
+  professors: Array<{
+    id: number;
+    name: string;
+    nameEn?: string | null;
+    title?: string | null;
+    roomNumber: string | null;
+    email?: string | null;
+    phone?: string | null;
+    researchArea?: string | null;
+    websiteUrl?: string | null;
+    posX?: number | null;
+    posY?: number | null;
+  }>;
 }
 
 interface BuildingWithFloors {
@@ -166,15 +181,7 @@ export function DepartmentInfoClient({ buildings, professors }: Props) {
               {selectedFloor ? (
                 <Card>
                   <CardContent className="p-6 space-y-4">
-                    {selectedFloor.imageUrl ? (
-                      <div className="relative w-full bg-muted rounded-xl overflow-hidden" style={{ minHeight: 300 }}>
-                        <img src={selectedFloor.imageUrl} alt="평면도" className="w-full h-auto" />
-                      </div>
-                    ) : (
-                      <div className="bg-muted rounded-xl p-12 text-center text-muted-foreground">
-                        {lang === "ko" ? "평면도가 등록되지 않았습니다." : "No floor plan available."}
-                      </div>
-                    )}
+                    <FloorplanViewer floor={selectedFloor} professors={selectedFloor.professors} />
 
                     {selectedFloor.description && (
                       <div className="p-3 rounded-lg bg-amber-500/10 border border-amber-500/20 text-sm">

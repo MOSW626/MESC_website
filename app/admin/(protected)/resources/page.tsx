@@ -9,6 +9,55 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AdminGuide } from "@/components/admin-guide";
+import { Loader2, Upload, FolderUp } from "lucide-react";
+
+function DriveDropZone({ courseCode, onUploaded }: { courseCode: string; onUploaded: (url: string) => void }) {
+  const [uploading, setUploading] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
+  const [error, setError] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  async function handleFile(file: File) {
+    setError(""); setUploading(true);
+    const fd = new FormData();
+    fd.append("file", file);
+    fd.append("courseCode", courseCode || "기타");
+    const r = await fetch("/api/resources/upload", { method: "POST", body: fd });
+    const data = await r.json();
+    if (r.ok && data.url) {
+      onUploaded(data.url);
+    } else {
+      setError(data.error ?? "업로드 실패");
+    }
+    setUploading(false);
+    if (inputRef.current) inputRef.current.value = "";
+  }
+
+  return (
+    <div
+      onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+      onDragLeave={() => setDragOver(false)}
+      onDrop={(e) => {
+        e.preventDefault();
+        setDragOver(false);
+        const f = e.dataTransfer.files[0];
+        if (f) handleFile(f);
+      }}
+      className={`rounded-lg border-2 border-dashed text-center text-xs p-4 transition-colors cursor-pointer ${
+        dragOver ? "border-primary bg-primary/5 text-primary" : "border-border text-muted-foreground hover:border-primary/50"
+      }`}
+      onClick={() => inputRef.current?.click()}
+    >
+      {uploading ? (
+        <span className="flex items-center justify-center gap-2"><Loader2 className="h-4 w-4 animate-spin" />Drive 업로드 중...</span>
+      ) : (
+        <span className="flex items-center justify-center gap-2"><FolderUp className="h-4 w-4" />파일을 드롭하거나 클릭 — Drive 의 <code className="px-1 rounded bg-muted">학습자료 / {courseCode || "기타"}</code> 폴더로 업로드됩니다</span>
+      )}
+      <input ref={inputRef} type="file" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
+      {error && <p className="text-destructive mt-1">{error}</p>}
+    </div>
+  );
+}
 
 interface Resource {
   id: number;
@@ -143,6 +192,7 @@ export default function AdminResourcesPage() {
             <div className="space-y-2">
               <Label>파일 URL (Google Drive, Dropbox 등 공유 링크)</Label>
               <Input value={fileUrl} onChange={(e) => setFileUrl(e.target.value)} placeholder="https://..." />
+              <DriveDropZone courseCode={courseCode || category} onUploaded={(url) => setFileUrl(url)} />
             </div>
             <div className="space-y-2">
               <Label>연결 과목 (선택) — 수업 정보 페이지에서 표시됨</Label>

@@ -9,6 +9,8 @@ import { Input } from "@/components/ui/input";
 import { Camera, MessageSquare, Cookie, Star, ChevronRight, Send } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { SuggestionsTab } from "./suggestions-tab";
+import { PostsTab } from "./posts-tab";
 
 interface Event {
   id: number;
@@ -26,7 +28,7 @@ interface SnackWish {
   createdAt: string;
 }
 
-const TABS = ["갤러리", "간식 위시리스트"] as const;
+const TABS = ["갤러리", "건의함", "자유게시판", "간식 위시리스트"] as const;
 type Tab = typeof TABS[number];
 
 export default function CommunityPage() {
@@ -65,6 +67,8 @@ export default function CommunityPage() {
 
   const TAB_LABELS: Record<Tab, string> = {
     "갤러리": language === "ko" ? "갤러리" : "Gallery",
+    "건의함": language === "ko" ? "건의함" : "Suggestions",
+    "자유게시판": language === "ko" ? "자유게시판" : "Free Board",
     "간식 위시리스트": language === "ko" ? "간식 위시리스트" : "Snack Wishlist",
   };
 
@@ -143,6 +147,12 @@ export default function CommunityPage() {
           </div>
         )
       )}
+
+      {/* 건의함 탭 */}
+      {activeTab === "건의함" && <SuggestionsTab />}
+
+      {/* 자유게시판 탭 */}
+      {activeTab === "자유게시판" && <PostsTab />}
 
       {/* 간식 위시리스트 탭 */}
       {activeTab === "간식 위시리스트" && (

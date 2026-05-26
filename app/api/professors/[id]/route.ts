@@ -25,9 +25,25 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   if (typeof body.websiteUrl === "string") data.websiteUrl = body.websiteUrl.trim() || null;
   if (typeof body.imageUrl === "string") data.imageUrl = body.imageUrl.trim() || null;
   if (typeof body.order === "number") data.order = body.order;
+  // 평면도 핀 좌표 (0~1 정규화) — null 로 지우기도 허용
+  if ("posX" in body) {
+    if (body.posX === null) data.posX = null;
+    else if (typeof body.posX === "number" && body.posX >= 0 && body.posX <= 1) data.posX = body.posX;
+    else return NextResponse.json({ error: "posX 는 0~1 사이여야 합니다." }, { status: 400 });
+  }
+  if ("posY" in body) {
+    if (body.posY === null) data.posY = null;
+    else if (typeof body.posY === "number" && body.posY >= 0 && body.posY <= 1) data.posY = body.posY;
+    else return NextResponse.json({ error: "posY 는 0~1 사이여야 합니다." }, { status: 400 });
+  }
 
   const professor = await prisma.professor.update({ where: { id }, data });
   return NextResponse.json(professor);
+}
+
+export async function PATCH(req: Request, ctx: { params: Promise<{ id: string }> }) {
+  // PATCH 는 PUT 과 동일한 partial-update 로직을 재사용 (핀 좌표 전용)
+  return PUT(req, ctx);
 }
 
 export async function DELETE(_req: Request, { params }: { params: Promise<{ id: string }> }) {

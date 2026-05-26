@@ -261,3 +261,18 @@ export async function findSubfolder(
   const data = (await res.json()) as { files?: { id: string; name: string }[] };
   return data.files?.[0]?.id ?? null;
 }
+
+/**
+ * 부모 폴더 아래에 특정 이름의 하위 폴더가 있으면 그 ID 반환, 없으면 생성 후 공개 권한 설정.
+ */
+export async function ensureSubfolder(
+  accessToken: string,
+  parentId: string,
+  name: string,
+): Promise<string> {
+  const existing = await findSubfolder(accessToken, parentId, name);
+  if (existing) return existing;
+  const created = await createFolder(accessToken, name, parentId);
+  await makePublic(accessToken, created.id).catch(() => {});
+  return created.id;
+}

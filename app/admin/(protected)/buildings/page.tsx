@@ -7,15 +7,24 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Loader2, Plus, Trash2, Upload } from "lucide-react";
+import { Building2, Loader2, MapPin, Plus, Trash2, Upload, X } from "lucide-react";
 import { AdminGuide } from "@/components/admin-guide";
+import { FloorplanEditor } from "@/components/floorplan/floorplan-editor";
 
 interface Floor {
   id: number;
   level: number;
   imageUrl: string | null;
   description: string | null;
-  professors: Array<{ id: number; name: string }>;
+  width: number | null;
+  height: number | null;
+  professors: Array<{
+    id: number;
+    name: string;
+    roomNumber: string | null;
+    posX: number | null;
+    posY: number | null;
+  }>;
 }
 
 interface Building {
@@ -41,8 +50,50 @@ export default function AdminBuildingsPage() {
   const [floorDesc, setFloorDesc] = useState("");
   const [floorImageUrl, setFloorImageUrl] = useState("");
   const [uploading, setUploading] = useState(false);
+  const [pinFloor, setPinFloor] = useState<Floor | null>(null);
   const formRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+
+  function FloorplanDriveUpload({ floorId, onUploaded }: { floorId: number; onUploaded: () => void }) {
+    const [uploading, setUploading] = useState(false);
+    const inputRef = useRef<HTMLInputElement>(null);
+    async function handleFile(file: File) {
+      setUploading(true);
+      const fd = new FormData(); fd.append("file", file);
+      const r = await fetch(`/api/buildings/floors/${floorId}/upload-floorplan`, { method: "POST", body: fd });
+      const data = await r.json();
+      if (r.ok) onUploaded();
+      else alert(data.error ?? "업로드 실패");
+      setUploading(false);
+      if (inputRef.current) inputRef.current.value = "";
+    }
+    return (
+      <div className="flex items-center gap-2">
+        <Button size="sm" variant="outline" onClick={() => inputRef.current?.click()} disabled={uploading} className="gap-1">
+          {uploading ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Upload className="h-3.5 w-3.5" />}
+          {uploading ? "Drive 업로드 중..." : "평면도를 Drive 에 업로드"}
+        </Button>
+        <input ref={inputRef} type="file" accept="image/png,image/jpeg,image/webp" className="hidden"
+          onChange={(e) => { const f = e.target.files?.[0]; if (f) handleFile(f); }} />
+      </div>
+    );
+  }
+
+  async function savePin(professorId: number, posX: number | null, posY: number | null) {
+    await fetch(`/api/professors/${professorId}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ posX, posY }),
+    });
+    // 재로딩 후 pinFloor 도 갱신
+    const res = await fetch("/api/buildings");
+    const fresh: Building[] = await res.json();
+    setBuildings(fresh);
+    if (pinFloor) {
+      const f = fresh.flatMap((b) => b.floors).find((x) => x.id === pinFloor.id);
+      if (f) setPinFloor(f);
+    }
+  }
 
   async function load() {
     const res = await fetch("/api/buildings");
@@ -271,15 +322,22 @@ export default function AdminBuildingsPage() {
               ) : (
                 selectedBuilding.floors.map((f) => (
                   <div key={f.id} className="p-3 rounded-lg border border-border space-y-2">
-                    <div className="flex items-center justify-between">
+                    <div className="flex items-center justify-between gap-2">
                       <Badge variant="outline">{f.level}F</Badge>
-                      <Button variant="ghost" size="sm" onClick={() => deleteFloor(f.id)} className="text-destructive">
-                        <Trash2 className="h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-1">
+                        <Button variant="outline" size="sm" onClick={() => setPinFloor(f)} disabled={!f.imageUrl} className="gap-1">
+                          <MapPin className="h-3.5 w-3.5" />핀 배치
+                        </Button>
+                        <Button variant="ghost" size="sm" onClick={() => deleteFloor(f.id)} className="text-destructive">
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
                     </div>
                     {f.imageUrl && (
+                      // eslint-disable-next-line @next/next/no-img-element
                       <img src={f.imageUrl} alt="" className="w-full h-32 object-contain bg-muted rounded" />
                     )}
+                    <FloorplanDriveUpload floorId={f.id} onUploaded={load} />
                     <Input
                       defaultValue={f.description ?? ""}
                       placeholder="통로 안내 메시지"
@@ -297,6 +355,30 @@ export default function AdminBuildingsPage() {
             </div>
           </CardContent>
         </Card>
+      )}
+
+      {/* 평면도 핀 배치 모달 */}
+      {pinFloor && (
+        <div
+          className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4"
+          onClick={() => setPinFloor(null)}
+        >
+          <div
+            className="bg-card rounded-2xl shadow-2xl w-full max-w-5xl max-h-[90vh] overflow-auto p-5"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold flex items-center gap-2">
+                <MapPin className="h-5 w-5 text-primary" />
+                {pinFloor.level}F 평면도 — 교수실 핀 배치
+              </h3>
+              <Button variant="ghost" size="sm" onClick={() => setPinFloor(null)}>
+                <X className="h-4 w-4" />
+              </Button>
+            </div>
+            <FloorplanEditor floor={pinFloor} professors={pinFloor.professors} onSave={savePin} />
+          </div>
+        </div>
       )}
     </div>
   );
