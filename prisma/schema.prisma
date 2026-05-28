@@ -128,6 +128,7 @@ model Building {
   nameEn      String?
   description String?
   order       Int             @default(0)
+  isExternal  Boolean         @default(false) // 별관·PP동 같은 외부 부속 건물
   floors      BuildingFloor[]
   professors  Professor[]
 }
@@ -144,7 +145,26 @@ model BuildingFloor {
   height      Int?
   driveFileId String?     // Drive 업로드 시 ID
   professors  Professor[]
+  rooms       Room[]
   @@unique([buildingId, level])
+}
+
+// 호실
+//   code  예: "2305" (전체) 또는 "별관-101"
+//   wing  N7 안에서 1~5 (1100번대~1500번대) — 외부 건물은 null
+model Room {
+  id          Int            @id @default(autoincrement())
+  floorId     Int
+  floor       BuildingFloor  @relation(fields: [floorId], references: [id], onDelete: Cascade)
+  code        String
+  wing        Int?
+  name        String?
+  posX        Float?         // 평면도 위 핀 좌표 (선택)
+  posY        Float?
+  order       Int            @default(0)
+  professors  Professor[]
+  @@unique([floorId, code])
+  @@index([floorId, wing])
 }
 
 // Google Drive OAuth 연결 정보 (단일 행 — id 1 고정)
@@ -177,6 +197,8 @@ model Professor {
   order        Int            @default(0)
   posX         Float?         // 0~1 정규화 좌표 (평면도 위 핀 위치)
   posY         Float?
+  roomId       Int?
+  room         Room?          @relation(fields: [roomId], references: [id])
 }
 
 // 익명 건의함

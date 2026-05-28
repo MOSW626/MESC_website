@@ -53,11 +53,21 @@ export default function AdminProfessorsPage() {
   const formRef = useRef<HTMLDivElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [rooms, setRooms] = useState<Array<{ id: number; code: string; name: string | null; floorId: number; floor: { buildingId: number } }>>([]);
+
   async function load() {
-    const [pRes, bRes] = await Promise.all([fetch("/api/professors"), fetch("/api/buildings")]);
+    const [pRes, bRes, rRes] = await Promise.all([fetch("/api/professors"), fetch("/api/buildings"), fetch("/api/rooms")]);
     setProfessors(await pRes.json());
     setBuildings(await bRes.json());
+    setRooms(await rRes.json());
   }
+
+  // 현재 선택된 floorId 의 호실만 datalist 에 노출 (없으면 전체)
+  const availableRooms = useMemo(() => {
+    const fId = Number(form.floorId);
+    if (!fId) return [];
+    return rooms.filter((r) => r.floorId === fId);
+  }, [rooms, form.floorId]);
 
   useEffect(() => { load(); }, []);
 
@@ -190,7 +200,19 @@ export default function AdminProfessorsPage() {
               </div>
               <div className="space-y-2">
                 <Label>호실</Label>
-                <Input value={form.roomNumber} onChange={(e) => setForm({ ...form, roomNumber: e.target.value })} placeholder="3301" />
+                <Input
+                  value={form.roomNumber}
+                  onChange={(e) => setForm({ ...form, roomNumber: e.target.value })}
+                  placeholder="3301"
+                  list="rooms-list"
+                />
+                <datalist id="rooms-list">
+                  {availableRooms.map((r) => (
+                    <option key={r.id} value={r.code}>
+                      {r.code} {r.name ? `(${r.name})` : ""}
+                    </option>
+                  ))}
+                </datalist>
               </div>
             </div>
             <div className="grid grid-cols-2 gap-3">

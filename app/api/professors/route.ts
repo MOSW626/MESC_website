@@ -37,6 +37,15 @@ export async function POST(req: Request) {
     order: typeof body.order === "number" ? body.order : 0,
   };
 
-  const professor = await prisma.professor.create({ data });
+  // floorId + roomNumber 가 있으면 자동으로 매칭되는 Room 찾아 roomId 설정
+  let roomId: number | null = null;
+  if (data.floorId && data.roomNumber) {
+    const matched = await prisma.room.findUnique({
+      where: { floorId_code: { floorId: data.floorId, code: data.roomNumber } },
+    });
+    if (matched) roomId = matched.id;
+  }
+
+  const professor = await prisma.professor.create({ data: { ...data, roomId } });
   return NextResponse.json(professor, { status: 201 });
 }

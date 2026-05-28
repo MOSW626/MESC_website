@@ -27,6 +27,14 @@ interface Professor {
   imageUrl: string | null;
 }
 
+interface RoomInList {
+  id: number;
+  code: string;
+  wing: number | null;
+  name: string | null;
+  professors: Array<{ id: number; name: string; title?: string | null; email?: string | null; researchArea?: string | null; websiteUrl?: string | null }>;
+}
+
 interface FloorWithProfs {
   id: number;
   level: number;
@@ -34,6 +42,7 @@ interface FloorWithProfs {
   description: string | null;
   width: number | null;
   height: number | null;
+  rooms: RoomInList[];
   professors: Array<{
     id: number;
     name: string;
@@ -189,21 +198,50 @@ export function DepartmentInfoClient({ buildings, professors }: Props) {
                       </div>
                     )}
 
-                    {selectedFloor.professors.length > 0 && (
-                      <div>
-                        <p className="text-xs font-semibold text-muted-foreground mb-2 uppercase">
-                          {lang === "ko" ? "이 층의 교수님" : "Professors on this floor"}
-                        </p>
-                        <div className="flex flex-wrap gap-2">
-                          {selectedFloor.professors.map((p) => (
-                            <Badge key={p.id} variant="outline" className="gap-1">
-                              <User className="h-3 w-3" />
-                              {p.name} {p.roomNumber && `(${p.roomNumber})`}
-                            </Badge>
-                          ))}
+                    {/* Wing 별 호실 목록 */}
+                    {selectedFloor.rooms && selectedFloor.rooms.length > 0 && (() => {
+                      const byWing = new Map<number | null, RoomInList[]>();
+                      for (const r of selectedFloor.rooms) {
+                        const w = r.wing;
+                        if (!byWing.has(w)) byWing.set(w, []);
+                        byWing.get(w)!.push(r);
+                      }
+                      const sortedWings = Array.from(byWing.keys()).sort((a, b) => {
+                        if (a === null) return 1;
+                        if (b === null) return -1;
+                        return a - b;
+                      });
+                      return (
+                        <div className="space-y-4">
+                          {sortedWings.map((w) => {
+                            const rooms = byWing.get(w)!;
+                            const label = w === null
+                              ? (lang === "ko" ? "지하·기타" : "Other")
+                              : (lang === "ko" ? `${w}동 (${w}${"00"}번대)` : `Wing ${w} (${w}00s)`);
+                            return (
+                              <div key={String(w)}>
+                                <p className="text-xs font-bold text-muted-foreground mb-2 uppercase tracking-wider">
+                                  🏢 {label}
+                                </p>
+                                <div className="flex flex-wrap gap-1.5">
+                                  {rooms.map((r) => (
+                                    <div key={r.id} className="group relative">
+                                      <Badge variant="outline" className="gap-1 cursor-default">
+                                        <span className="font-mono">{r.code}</span>
+                                        {r.name && <span className="text-muted-foreground">— {r.name}</span>}
+                                        {r.professors.length > 0 && (
+                                          <span className="text-primary font-semibold">· {r.professors.map(p => p.name).join(", ")}</span>
+                                        )}
+                                      </Badge>
+                                    </div>
+                                  ))}
+                                </div>
+                              </div>
+                            );
+                          })}
                         </div>
-                      </div>
-                    )}
+                      );
+                    })()}
                   </CardContent>
                 </Card>
               ) : (

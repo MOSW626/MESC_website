@@ -11,6 +11,14 @@ export default async function DepartmentInfoPage() {
         orderBy: { level: "asc" },
         include: {
           professors: { orderBy: { roomNumber: "asc" } },
+          rooms: {
+            orderBy: [{ wing: "asc" }, { code: "asc" }],
+            include: {
+              professors: {
+                select: { id: true, name: true, title: true, email: true, websiteUrl: true, researchArea: true },
+              },
+            },
+          },
         },
       },
     },
