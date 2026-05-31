@@ -16,6 +16,14 @@ export async function PUT(req: Request, { params }: { params: Promise<{ floorId:
   if (typeof body.level === "number") data.level = body.level;
   if (typeof body.imageUrl === "string") data.imageUrl = body.imageUrl.trim() || null;
   if (typeof body.description === "string") data.description = body.description.trim().slice(0, 500) || null;
+  if (typeof body.imageWidth === "number") data.imageWidth = body.imageWidth;
+  if (typeof body.imageHeight === "number") data.imageHeight = body.imageHeight;
+  if (typeof body.regionsJson === "string") data.regionsJson = body.regionsJson || null;
+  if (body.regionsJson === null) data.regionsJson = null;
+  if (typeof body.graphJson === "string") data.graphJson = body.graphJson || null;
+  if (body.graphJson === null) data.graphJson = null;
+  if (typeof body.svgContent === "string") data.svgContent = body.svgContent || null;
+  if (body.svgContent === null) data.svgContent = null;
 
   const floor = await prisma.buildingFloor.update({ where: { id }, data });
   return NextResponse.json(floor);

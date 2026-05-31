@@ -1,0 +1,5818 @@
+{
+  "version": "1.0.0",
+  "project": {
+    "name": "me-website",
+    "languages": [
+      "TypeScript",
+      "CSS",
+      "SQL",
+      "Prisma",
+      "Markdown",
+      "JavaScript"
+    ],
+    "frameworks": [
+      "Next.js",
+      "NextAuth.js",
+      "Prisma",
+      "Tailwind CSS",
+      "shadcn/ui",
+      "Recharts"
+    ],
+    "description": "KAIST 기계공학과 학생회(MESC) 공식 웹사이트 — 공지사항, 학습자료, 예산 투명화, 건물 층별 지도, 교수님 오피스 정보 제공",
+    "analyzedAt": "2026-05-31T13:49:11.327809Z",
+    "gitCommitHash": "8d142e828fca01202400dabff98a0f2836ed36e6"
+  },
+  "nodes": [
+    {
+      "id": "file:app/api/snack-wishes/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/snack-wishes/route.ts",
+      "summary": "API route for snack wishlists: public GET to list all wishes, rate-limited public POST to submit a wish (with XSS stripping), and admin-protected DELETE to remove a wish.",
+      "tags": [
+        "api-handler",
+        "snack-wishes",
+        "rate-limiting",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/api/upload/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/upload/route.ts",
+      "summary": "Admin-protected file upload API that validates MIME type and file size, extracts image dimensions via sharp, and stores images to blob storage using Vercel Blob.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "upload",
+        "file-handling"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/auth.ts",
+      "type": "file",
+      "name": "auth.ts",
+      "filePath": "lib/auth.ts",
+      "summary": "NextAuth.js v5 configuration exporting handlers, signIn, signOut, and auth helpers; implements credentials-based admin authentication against environment-variable-stored credentials with JWT session strategy.",
+      "tags": [
+        "auth",
+        "service",
+        "singleton",
+        "middleware"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Uses NextAuth v5 destructured export pattern; JWT session strategy avoids database session storage."
+    },
+    {
+      "id": "file:lib/language-context.tsx",
+      "type": "file",
+      "name": "language-context.tsx",
+      "filePath": "lib/language-context.tsx",
+      "summary": "React context and hook for Korean/English language switching; persists language preference to localStorage and provides a `t()` translation helper.",
+      "tags": [
+        "hook",
+        "i18n",
+        "context",
+        "utility"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/language-context.tsx:LanguageProvider",
+      "type": "function",
+      "name": "LanguageProvider",
+      "filePath": "lib/language-context.tsx",
+      "lineRange": [
+        18,
+        58
+      ],
+      "summary": "Context provider that manages language state, syncs with localStorage, and exposes a translation function to child components.",
+      "tags": [
+        "component",
+        "context",
+        "i18n"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/language-context.tsx:useLanguage",
+      "type": "function",
+      "name": "useLanguage",
+      "filePath": "lib/language-context.tsx",
+      "lineRange": [
+        60,
+        62
+      ],
+      "summary": "Custom hook that returns the LanguageContext value including current language, setLang, and the t() translation function.",
+      "tags": [
+        "hook",
+        "i18n",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/links.ts",
+      "type": "file",
+      "name": "links.ts",
+      "filePath": "lib/links.ts",
+      "summary": "Centralized data module exporting IMPORTANT_LINKS (department homepage, KAIST portal, council bylaws) and COMMUNITY_LINKS (KakaoTalk, Naver Cafe, Instagram accounts) with bilingual Korean/English labels for use across the site.",
+      "tags": [
+        "utility",
+        "configuration",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/pathfinding.ts",
+      "type": "file",
+      "name": "pathfinding.ts",
+      "filePath": "lib/pathfinding.ts",
+      "summary": "Floor map pathfinding library implementing Dijkstra's algorithm; provides graph parsing, adjacency building, shortest path finding, and SVG polyline point generation for building navigation.",
+      "tags": [
+        "utility",
+        "algorithm",
+        "pathfinding",
+        "floor-map"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:lib/pathfinding.ts:findPath",
+      "type": "function",
+      "name": "findPath",
+      "filePath": "lib/pathfinding.ts",
+      "lineRange": [
+        58,
+        111
+      ],
+      "summary": "Dijkstra's shortest-path algorithm implementation operating on a building floor graph; returns the ordered array of node IDs from source to destination.",
+      "tags": [
+        "algorithm",
+        "pathfinding",
+        "utility"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:lib/pathfinding.ts:buildAdjacency",
+      "type": "function",
+      "name": "buildAdjacency",
+      "filePath": "lib/pathfinding.ts",
+      "lineRange": [
+        34,
+        48
+      ],
+      "summary": "Builds a bidirectional adjacency map from a graph's edge list, precomputing Euclidean distances as edge weights.",
+      "tags": [
+        "utility",
+        "algorithm",
+        "pathfinding"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pathfinding.ts:parseGraph",
+      "type": "function",
+      "name": "parseGraph",
+      "filePath": "lib/pathfinding.ts",
+      "lineRange": [
+        22,
+        31
+      ],
+      "summary": "Parses a JSON string into a typed floor graph object with nodes and edges arrays.",
+      "tags": [
+        "utility",
+        "pathfinding"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pathfinding.ts:pathToPolylinePoints",
+      "type": "function",
+      "name": "pathToPolylinePoints",
+      "filePath": "lib/pathfinding.ts",
+      "lineRange": [
+        114,
+        122
+      ],
+      "summary": "Converts a path (array of node IDs) to an SVG polyline points string by mapping node IDs to x,y coordinates.",
+      "tags": [
+        "utility",
+        "svg",
+        "pathfinding"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/pathfinding.ts:polygonCentroid",
+      "type": "function",
+      "name": "polygonCentroid",
+      "filePath": "lib/pathfinding.ts",
+      "lineRange": [
+        125,
+        130
+      ],
+      "summary": "Computes the arithmetic centroid of a polygon from its vertex point string, used to position room labels.",
+      "tags": [
+        "utility",
+        "svg",
+        "geometry"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/prisma.ts",
+      "type": "file",
+      "name": "prisma.ts",
+      "filePath": "lib/prisma.ts",
+      "summary": "Singleton Prisma client factory using the libSQL adapter; exports a shared `prisma` instance with global caching to prevent multiple connections in development hot-reload cycles.",
+      "tags": [
+        "singleton",
+        "service",
+        "database",
+        "utility"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Prisma v7 requires the @prisma/adapter-libsql adapter; the global caching pattern avoids connection exhaustion under Next.js hot-reload."
+    },
+    {
+      "id": "file:lib/svg-parser.ts",
+      "type": "file",
+      "name": "svg-parser.ts",
+      "filePath": "lib/svg-parser.ts",
+      "summary": "SVG utility library for floor maps: sanitizes SVG against XSS, extracts viewBox dimensions, detects rooms and facilities from text elements, and converts detected rooms to clickable region polygons.",
+      "tags": [
+        "utility",
+        "svg",
+        "security",
+        "floor-map"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:lib/svg-parser.ts:sanitizeSvg",
+      "type": "function",
+      "name": "sanitizeSvg",
+      "filePath": "lib/svg-parser.ts",
+      "lineRange": [
+        34,
+        46
+      ],
+      "summary": "Strips XSS vectors from raw SVG content by removing script tags, foreignObject elements, event handler attributes, and javascript: URLs.",
+      "tags": [
+        "security",
+        "validation",
+        "svg"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/svg-parser.ts:detectRoomsAndFacilities",
+      "type": "function",
+      "name": "detectRoomsAndFacilities",
+      "filePath": "lib/svg-parser.ts",
+      "lineRange": [
+        88,
+        165
+      ],
+      "summary": "Parses a sanitized SVG DOM to detect room numbers and facility icons from text elements, returning structured room and facility arrays with position and label data.",
+      "tags": [
+        "svg",
+        "floor-map",
+        "parsing"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:lib/svg-parser.ts:detectedRoomsToRegions",
+      "type": "function",
+      "name": "detectedRoomsToRegions",
+      "filePath": "lib/svg-parser.ts",
+      "lineRange": [
+        173,
+        194
+      ],
+      "summary": "Converts detected room positions to bounding-box polygon regions with optional padding, ready for interactive overlay rendering.",
+      "tags": [
+        "svg",
+        "floor-map",
+        "geometry"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:lib/utils.ts",
+      "type": "file",
+      "name": "utils.ts",
+      "filePath": "lib/utils.ts",
+      "summary": "Provides the cn() class name utility merging clsx conditional classes with tailwind-merge deduplication, used throughout the component library.",
+      "tags": [
+        "utility",
+        "component",
+        "tailwind"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:lib/validation.ts",
+      "type": "file",
+      "name": "validation.ts",
+      "filePath": "lib/validation.ts",
+      "summary": "Server-side input validation utilities used by API routes to sanitize and validate URLs, strings, monetary amounts, IDs, dates, and category values before database writes.",
+      "tags": [
+        "validation",
+        "utility",
+        "security",
+        "api-handler"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:lib/validation.ts:isValidUrl",
+      "type": "function",
+      "name": "isValidUrl",
+      "filePath": "lib/validation.ts",
+      "lineRange": [
+        12,
+        20
+      ],
+      "summary": "Validates a URL string against an allowlist of permitted protocols (http, https, etc.) to prevent XSS via malicious URLs.",
+      "tags": [
+        "validation",
+        "security",
+        "url"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/validation.ts:parseId",
+      "type": "function",
+      "name": "parseId",
+      "filePath": "lib/validation.ts",
+      "lineRange": [
+        40,
+        43
+      ],
+      "summary": "Parses and validates an integer ID from a string, returning null if the value is not a valid integer.",
+      "tags": [
+        "validation",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:prisma.config.ts",
+      "type": "config",
+      "name": "prisma.config.ts",
+      "filePath": "prisma.config.ts",
+      "summary": "Prisma v7 datasource configuration using defineConfig to set the schema path, migrations directory, and DATABASE_URL from environment variables — required because Prisma v7 does not support the url field directly in schema.prisma.",
+      "tags": [
+        "configuration",
+        "database",
+        "prisma"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Prisma v7 requires datasource configuration to be declared in prisma.config.ts rather than in the schema.prisma datasource block."
+    },
+    {
+      "id": "schema:prisma/schema.prisma",
+      "type": "schema",
+      "name": "schema.prisma",
+      "filePath": "prisma/schema.prisma",
+      "summary": "Prisma ORM schema defining 13 models: Notice, Resource, BudgetItem, Member, Course, Event, EventPhoto, EventFeedback, SnackWish, PopupSettings, PopupLink, Building, BuildingFloor, and Professor; covers all core entities for the MESC student council website.",
+      "tags": [
+        "schema-definition",
+        "database",
+        "data-model"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses Prisma v7 with SQLite provider; datasource URL is managed in prisma.config.ts instead of here."
+    },
+    {
+      "id": "table:prisma/schema.prisma:Notice",
+      "type": "table",
+      "name": "Notice",
+      "filePath": "prisma/schema.prisma",
+      "summary": "Student council notice model with title, content, category, pinned flag, and timestamps.",
+      "tags": [
+        "data-model",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:prisma/schema.prisma:Resource",
+      "type": "table",
+      "name": "Resource",
+      "filePath": "prisma/schema.prisma",
+      "summary": "Learning resource model with title, file URL, category, and optional course code.",
+      "tags": [
+        "data-model",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:prisma/schema.prisma:BudgetItem",
+      "type": "table",
+      "name": "BudgetItem",
+      "filePath": "prisma/schema.prisma",
+      "summary": "Budget transparency model tracking income/expense entries with date, description, amount, category, and optional receipt URL.",
+      "tags": [
+        "data-model",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:prisma/schema.prisma:Member",
+      "type": "table",
+      "name": "Member",
+      "filePath": "prisma/schema.prisma",
+      "summary": "Student council member model with name, role, bureau, council flag, image URL, and ordering.",
+      "tags": [
+        "data-model",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:prisma/schema.prisma:Building",
+      "type": "table",
+      "name": "Building",
+      "filePath": "prisma/schema.prisma",
+      "summary": "Campus building model with unique code, Korean/English name, and relations to BuildingFloor and Professor.",
+      "tags": [
+        "data-model",
+        "database",
+        "floor-map"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:prisma/schema.prisma:BuildingFloor",
+      "type": "table",
+      "name": "BuildingFloor",
+      "filePath": "prisma/schema.prisma",
+      "summary": "Floor plan model storing image URL, dimensions, raw SVG content, room polygon regions JSON, and pathfinding graph JSON for each floor of a building.",
+      "tags": [
+        "data-model",
+        "database",
+        "floor-map"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:prisma/schema.prisma:Professor",
+      "type": "table",
+      "name": "Professor",
+      "filePath": "prisma/schema.prisma",
+      "summary": "Professor office information model with name, title, building/floor relations, room number, contact fields, and research area.",
+      "tags": [
+        "data-model",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "table:prisma/schema.prisma:SnackWish",
+      "type": "table",
+      "name": "SnackWish",
+      "filePath": "prisma/schema.prisma",
+      "summary": "Snack wishlist entry model with text content and creation timestamp.",
+      "tags": [
+        "data-model",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:prisma/schema.prisma:Event",
+      "type": "table",
+      "name": "Event",
+      "filePath": "prisma/schema.prisma",
+      "summary": "Student council event model with title, date, cover image, and relations to EventPhoto and EventFeedback.",
+      "tags": [
+        "data-model",
+        "database"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "table:prisma/migrations/20260323000000_init/migration.sql:Notice",
+      "type": "table",
+      "name": "Notice",
+      "filePath": "prisma/migrations/20260323000000_init/migration.sql",
+      "summary": "Initial CREATE TABLE statement for the Notice model establishing the base schema.",
+      "tags": [
+        "database",
+        "migration"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:prisma/migrations/20260323000000_init/migration.sql",
+      "type": "file",
+      "name": "migration.sql",
+      "filePath": "prisma/migrations/20260323000000_init/migration.sql",
+      "summary": "Initial database migration creating all core tables: Notice, Resource, BudgetItem, Member, Course, Event, EventPhoto, EventFeedback, SnackWish, PopupSettings, and PopupLink.",
+      "tags": [
+        "database",
+        "migration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:prisma/migrations/20260506141714_add_floor_map_data/migration.sql",
+      "type": "file",
+      "name": "migration.sql",
+      "filePath": "prisma/migrations/20260506141714_add_floor_map_data/migration.sql",
+      "summary": "Migration adding the Building and BuildingFloor tables with floor map geometry fields (imageUrl, dimensions, regionsJson, graphJson) and the Professor model.",
+      "tags": [
+        "database",
+        "migration",
+        "floor-map"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:prisma/migrations/20260511042128_add_floor_svg_content/migration.sql",
+      "type": "file",
+      "name": "migration.sql",
+      "filePath": "prisma/migrations/20260511042128_add_floor_svg_content/migration.sql",
+      "summary": "Migration adding the svgContent column to BuildingFloor for storing raw inline SVG converted from DWG/PDF.",
+      "tags": [
+        "database",
+        "migration",
+        "floor-map"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:prisma/migrations/migration_lock.toml",
+      "type": "file",
+      "name": "migration_lock.toml",
+      "filePath": "prisma/migrations/migration_lock.toml",
+      "summary": "Prisma migration lock file recording the database provider (sqlite) to prevent accidental provider switches.",
+      "tags": [
+        "configuration",
+        "database",
+        "prisma"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/admin/(protected)/buildings/floor/[floorId]/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/admin/(protected)/buildings/floor/[floorId]/page.tsx",
+      "summary": "Admin server component for the floor map editor page; validates session and floor ID before rendering the FloorMapViewer editor UI for a specific building floor.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "component",
+        "floor-map"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/admin/(protected)/buildings/floor/[floorId]/page.tsx:FloorMapEditorPage",
+      "type": "function",
+      "name": "FloorMapEditorPage",
+      "filePath": "app/admin/(protected)/buildings/floor/[floorId]/page.tsx",
+      "lineRange": [
+        8,
+        65
+      ],
+      "summary": "Next.js server component that guards admin access, resolves the floor record from the database, and renders the floor map editor.",
+      "tags": [
+        "component",
+        "admin",
+        "server-component"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/admin/(protected)/layout.tsx",
+      "type": "file",
+      "name": "layout.tsx",
+      "filePath": "app/admin/(protected)/layout.tsx",
+      "summary": "Protected admin layout component that checks NextAuth session on every request and redirects unauthenticated users to the login page.",
+      "tags": [
+        "middleware",
+        "admin",
+        "auth",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/admin/(protected)/layout.tsx:ProtectedAdminLayout",
+      "type": "function",
+      "name": "ProtectedAdminLayout",
+      "filePath": "app/admin/(protected)/layout.tsx",
+      "lineRange": [
+        4,
+        16
+      ],
+      "summary": "Server-side layout wrapper that enforces authentication; redirects to login if no active session exists.",
+      "tags": [
+        "middleware",
+        "auth",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/api/auth/[...nextauth]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/auth/[...nextauth]/route.ts",
+      "summary": "NextAuth.js catch-all API route with rate limiting on POST requests; exports GET and POST handlers for the credentials-based authentication flow.",
+      "tags": [
+        "api-handler",
+        "auth",
+        "security",
+        "middleware"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/api/auth/[...nextauth]/route.ts:checkLoginLimit",
+      "type": "function",
+      "name": "checkLoginLimit",
+      "filePath": "app/api/auth/[...nextauth]/route.ts",
+      "lineRange": [
+        7,
+        17
+      ],
+      "summary": "In-memory IP-based rate limiter for login attempts; blocks IPs that exceed 5 attempts within a 60-second window.",
+      "tags": [
+        "security",
+        "rate-limiting",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/api/buildings/[id]/floors/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/buildings/[id]/floors/route.ts",
+      "summary": "Admin-protected API route for adding a new floor to a specific building; validates auth and input before creating a BuildingFloor record.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "buildings",
+        "floors"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/api/buildings/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/buildings/[id]/route.ts",
+      "summary": "Admin-protected API route for updating (PUT) or deleting (DELETE) a specific building record by ID.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "buildings"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/api/buildings/floors/[floorId]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/buildings/floors/[floorId]/route.ts",
+      "summary": "Admin-protected API route for updating (PUT) or deleting (DELETE) a specific building floor record by floor ID.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "buildings",
+        "floors"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/api/buildings/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/buildings/route.ts",
+      "summary": "API route for listing all buildings (public GET) and creating new buildings (admin-protected POST) with their floor associations.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "buildings"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/api/budget/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/budget/route.ts",
+      "summary": "Next.js API route handler for budget items: GET returns all budget items from the database, POST creates a new item with full input validation requiring admin authentication.",
+      "tags": [
+        "api-handler",
+        "database",
+        "validation",
+        "authentication"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/api/check-fee/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/check-fee/route.ts",
+      "summary": "Public GET endpoint that checks whether a student ID is present in the Google Sheets fee payment list; includes IP rate limiting, 5-minute CSV cache, and automatic student-ID column detection.",
+      "tags": [
+        "api-handler",
+        "check-fee",
+        "google-sheets",
+        "rate-limiting"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/api/check-fee/route.ts:fetchSheetData",
+      "type": "function",
+      "name": "fetchSheetData",
+      "filePath": "app/api/check-fee/route.ts",
+      "lineRange": [
+        28,
+        53
+      ],
+      "summary": "Fetches and parses the Google Sheets CSV export with a 5-minute in-memory cache; returns a 2D array of cell strings.",
+      "tags": [
+        "utility",
+        "google-sheets",
+        "caching"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/api/members/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/members/route.ts",
+      "summary": "Next.js API route handler for student council member records: GET lists all members, POST creates a new member with validation of name, role, bureau, and optional photo URL requiring admin authentication.",
+      "tags": [
+        "api-handler",
+        "database",
+        "validation",
+        "authentication"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/api/notices/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/notices/[id]/route.ts",
+      "summary": "API route for a specific notice: public GET by ID, admin-protected PUT (update) and DELETE with full input validation.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "notices",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/api/notices/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/notices/route.ts",
+      "summary": "API route for listing all notices (public GET) and creating new notices (admin-protected POST) with title, content, and category validation.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "notices",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/api/professors/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/professors/[id]/route.ts",
+      "summary": "Admin-protected API route for updating (PUT) or deleting (DELETE) a specific professor record by ID.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "professors"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/api/professors/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/professors/route.ts",
+      "summary": "API route for listing all professors with building/floor relations (public GET) and creating new professor entries (admin-protected POST).",
+      "tags": [
+        "api-handler",
+        "admin",
+        "professors"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/api/resources/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/resources/[id]/route.ts",
+      "summary": "Admin-protected API route for updating (PUT) or deleting (DELETE) a specific learning resource record by ID, with URL and string validation.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "resources",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/api/resources/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/resources/route.ts",
+      "summary": "API route for listing all learning resources (public GET) and creating new resources (admin-protected POST) with title, URL, and category validation.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "resources",
+        "validation"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/api/snack-wishes/[id]/route.ts",
+      "type": "file",
+      "name": "route.ts",
+      "filePath": "app/api/snack-wishes/[id]/route.ts",
+      "summary": "Admin-protected API route for deleting a specific snack wish entry by ID.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "snack-wishes"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/admin/(protected)/budget/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/admin/(protected)/budget/page.tsx",
+      "summary": "Admin budget management page allowing administrators to add, view, and delete budget items with KRW formatting and date-based categorization.",
+      "tags": [
+        "api-handler",
+        "admin",
+        "crud",
+        "budget"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/admin/(protected)/budget/page.tsx:AdminBudgetPage",
+      "type": "function",
+      "name": "AdminBudgetPage",
+      "filePath": "app/admin/(protected)/budget/page.tsx",
+      "lineRange": [
+        25,
+        159
+      ],
+      "summary": "Client component rendering the budget administration UI with form for creating entries and a table for managing existing budget items.",
+      "tags": [
+        "component",
+        "admin",
+        "crud"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/admin/(protected)/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/admin/(protected)/page.tsx",
+      "summary": "Main admin dashboard page showing navigation links to all admin sub-sections and quick links to public pages, protected by NextAuth session.",
+      "tags": [
+        "admin",
+        "entry-point",
+        "dashboard"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/admin/(protected)/page.tsx:AdminPage",
+      "type": "function",
+      "name": "AdminPage",
+      "filePath": "app/admin/(protected)/page.tsx",
+      "lineRange": [
+        8,
+        185
+      ],
+      "summary": "Server component rendering the admin dashboard with sign-out functionality and navigation to all protected admin sections.",
+      "tags": [
+        "component",
+        "admin",
+        "dashboard"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/admin/(protected)/snack-wishes/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/admin/(protected)/snack-wishes/page.tsx",
+      "summary": "Admin page for managing student snack wish submissions, supporting individual and bulk deletion of wish list entries.",
+      "tags": [
+        "admin",
+        "crud",
+        "snack-wishes"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/admin/(protected)/snack-wishes/page.tsx:AdminSnackWishesPage",
+      "type": "function",
+      "name": "AdminSnackWishesPage",
+      "filePath": "app/admin/(protected)/snack-wishes/page.tsx",
+      "lineRange": [
+        14,
+        85
+      ],
+      "summary": "Client component listing all snack wish submissions with options to delete individual entries or clear all at once.",
+      "tags": [
+        "component",
+        "admin",
+        "crud"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/admin/(protected)/members/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/admin/(protected)/members/page.tsx",
+      "summary": "Admin client component for managing student council member records with full CRUD operations: create, edit, delete, and reorder members with photo upload via the upload API.",
+      "tags": [
+        "component",
+        "api-handler",
+        "admin",
+        "crud"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/admin/(protected)/members/page.tsx:AdminMembersPage",
+      "type": "function",
+      "name": "AdminMembersPage",
+      "filePath": "app/admin/(protected)/members/page.tsx",
+      "lineRange": [
+        23,
+        268
+      ],
+      "summary": "Admin page component managing the full lifecycle of member records including form state, file upload, inline editing, submission, and deletion with optimistic UI feedback.",
+      "tags": [
+        "component",
+        "admin",
+        "crud",
+        "form"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/admin/(protected)/notices/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/admin/(protected)/notices/page.tsx",
+      "summary": "Admin notice management page providing create, edit, and delete operations for announcements with category and pinning support.",
+      "tags": [
+        "admin",
+        "crud",
+        "notices"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/admin/(protected)/notices/page.tsx:AdminNoticesPage",
+      "type": "function",
+      "name": "AdminNoticesPage",
+      "filePath": "app/admin/(protected)/notices/page.tsx",
+      "lineRange": [
+        21,
+        190
+      ],
+      "summary": "Client component managing the notices admin interface with inline editing, category filtering, and pinned-post toggling.",
+      "tags": [
+        "component",
+        "admin",
+        "crud"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/admin/(protected)/resources/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/admin/(protected)/resources/page.tsx",
+      "summary": "Admin resources management page enabling CRUD operations for study materials linked to courses with category classification.",
+      "tags": [
+        "admin",
+        "crud",
+        "resources"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/admin/(protected)/resources/page.tsx:AdminResourcesPage",
+      "type": "function",
+      "name": "AdminResourcesPage",
+      "filePath": "app/admin/(protected)/resources/page.tsx",
+      "lineRange": [
+        28,
+        199
+      ],
+      "summary": "Client component for creating and managing study resources, dynamically loading available courses to associate resources with course codes.",
+      "tags": [
+        "component",
+        "admin",
+        "crud"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/admin/(protected)/professors/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/admin/(protected)/professors/page.tsx",
+      "summary": "Admin professor management page with full CRUD, image upload, building/floor assignment, and live search filtering across professor records.",
+      "tags": [
+        "admin",
+        "crud",
+        "professors",
+        "file-upload"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/admin/(protected)/professors/page.tsx:AdminProfessorsPage",
+      "type": "function",
+      "name": "AdminProfessorsPage",
+      "filePath": "app/admin/(protected)/professors/page.tsx",
+      "lineRange": [
+        44,
+        288
+      ],
+      "summary": "Client component managing professor records with building/floor relationship, searchable list, image upload, and inline form editing.",
+      "tags": [
+        "component",
+        "admin",
+        "crud",
+        "search"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/budget/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/budget/page.tsx",
+      "summary": "Budget transparency page displaying income/expense summary, category breakdown with percentage bars, and a paginated transaction detail table fetched from the budget-summary API with KRW formatting.",
+      "tags": [
+        "component",
+        "service",
+        "data-model"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/budget/page.tsx:BudgetPage",
+      "type": "function",
+      "name": "BudgetPage",
+      "filePath": "app/budget/page.tsx",
+      "lineRange": [
+        69,
+        374
+      ],
+      "summary": "Budget transparency client component rendering financial summaries, category distribution bars, and a paginated transaction list with Korean currency formatting and i18n support.",
+      "tags": [
+        "component",
+        "service",
+        "data-model"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/calendar/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/calendar/page.tsx",
+      "summary": "Full-featured calendar page displaying monthly events fetched from the iCal API with Google Calendar subscription, iCal download, month navigation modal, and event detail list.",
+      "tags": [
+        "component",
+        "service",
+        "event-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/calendar/page.tsx:CalendarPage",
+      "type": "function",
+      "name": "CalendarPage",
+      "filePath": "app/calendar/page.tsx",
+      "lineRange": [
+        58,
+        421
+      ],
+      "summary": "Main calendar component with month/year navigation, event filtering by month, Google Calendar subscription button, iCal download, and a year/month selection modal.",
+      "tags": [
+        "component",
+        "event-handler",
+        "service"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/calendar/page.tsx:formatICalDate",
+      "type": "function",
+      "name": "formatICalDate",
+      "filePath": "app/calendar/page.tsx",
+      "lineRange": [
+        30,
+        45
+      ],
+      "summary": "Parses iCal DTSTART/DTEND date strings in compact format (e.g. 20260101T120000Z) into human-readable Korean date-time strings.",
+      "tags": [
+        "utility",
+        "date",
+        "formatting"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/check-fee/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/check-fee/page.tsx",
+      "summary": "Student fee payment lookup page that allows students to enter their ID and query the Google Sheets-backed check-fee API to verify membership fee payment status.",
+      "tags": [
+        "component",
+        "api-handler",
+        "service"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/check-fee/page.tsx:CheckFeePage",
+      "type": "function",
+      "name": "CheckFeePage",
+      "filePath": "app/check-fee/page.tsx",
+      "lineRange": [
+        11,
+        131
+      ],
+      "summary": "Interactive fee verification form with loading, error, and result states that calls /api/check-fee with the student ID and displays payment status with i18n text.",
+      "tags": [
+        "component",
+        "validation",
+        "service"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/department-info/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/department-info/page.tsx",
+      "summary": "Server component that fetches building and professor data from Prisma and passes it to the client-side DepartmentInfoClient component.",
+      "tags": [
+        "entry-point",
+        "server-component",
+        "department-info"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/department-info/page.tsx:DepartmentInfoPage",
+      "type": "function",
+      "name": "DepartmentInfoPage",
+      "filePath": "app/department-info/page.tsx",
+      "lineRange": [
+        6,
+        28
+      ],
+      "summary": "Async server component fetching buildings with nested floors/rooms and professors for rendering by the client component.",
+      "tags": [
+        "server-component",
+        "data-fetching"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/department-info/department-info-client.tsx",
+      "type": "file",
+      "name": "department-info-client.tsx",
+      "filePath": "app/department-info/department-info-client.tsx",
+      "summary": "Interactive client component for exploring department information, featuring tabbed building/floor navigation, professor search, and floor map viewing with room details.",
+      "tags": [
+        "component",
+        "department-info",
+        "search",
+        "i18n"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/department-info/department-info-client.tsx:DepartmentInfoClient",
+      "type": "function",
+      "name": "DepartmentInfoClient",
+      "filePath": "app/department-info/department-info-client.tsx",
+      "lineRange": [
+        57,
+        327
+      ],
+      "summary": "Client component rendering building/floor tabs, SVG floor map with room overlays, and a searchable professor directory with jump-to-floor links.",
+      "tags": [
+        "component",
+        "department-info",
+        "search"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/members/members-client.tsx",
+      "type": "file",
+      "name": "members-client.tsx",
+      "filePath": "app/members/members-client.tsx",
+      "summary": "Client-side React component for the members page, displaying student council members grouped by bureau and department clubs (MR, ZILZU) in a tabbed layout with i18n support, plus important links and SNS community links sections.",
+      "tags": [
+        "component",
+        "members",
+        "i18n",
+        "tab-layout"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/members/members-client.tsx:MembersClient",
+      "type": "function",
+      "name": "MembersClient",
+      "filePath": "app/members/members-client.tsx",
+      "lineRange": [
+        87,
+        269
+      ],
+      "summary": "Main exported client component that groups council members by bureau, renders them in tabs alongside department club info cards, and displays important and community link grids with bilingual labels.",
+      "tags": [
+        "component",
+        "members",
+        "i18n",
+        "api-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/members/members-client.tsx:MemberCard",
+      "type": "function",
+      "name": "MemberCard",
+      "filePath": "app/members/members-client.tsx",
+      "lineRange": [
+        69,
+        85
+      ],
+      "summary": "Renders a single member's avatar card with a circular profile image (or placeholder icon), name, and role label.",
+      "tags": [
+        "component",
+        "utility",
+        "members"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/members/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/members/page.tsx",
+      "summary": "Next.js server page for the /members route that fetches all members from the database ordered by position and passes them to the MembersClient component for rendering.",
+      "tags": [
+        "entry-point",
+        "api-handler",
+        "data-model"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/notices/[id]/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/notices/[id]/page.tsx",
+      "summary": "Client component rendering the detail view for a single notice, fetched by ID via API with loading state and back navigation.",
+      "tags": [
+        "component",
+        "notices",
+        "detail-view",
+        "i18n"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/notices/[id]/page.tsx:NoticeDetailPage",
+      "type": "function",
+      "name": "NoticeDetailPage",
+      "filePath": "app/notices/[id]/page.tsx",
+      "lineRange": [
+        20,
+        87
+      ],
+      "summary": "Client component loading and displaying a notice's full content including category badge, pinned status, and formatted creation date.",
+      "tags": [
+        "component",
+        "notices",
+        "i18n"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/notices/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/notices/page.tsx",
+      "summary": "Public notices listing page fetching all announcements and rendering them with category filter tabs and navigation to detail views.",
+      "tags": [
+        "component",
+        "notices",
+        "list-view",
+        "i18n"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/notices/page.tsx:NoticesPage",
+      "type": "function",
+      "name": "NoticesPage",
+      "filePath": "app/notices/page.tsx",
+      "lineRange": [
+        19,
+        98
+      ],
+      "summary": "Client component displaying a filterable list of notices grouped by category with pinned posts surfaced first.",
+      "tags": [
+        "component",
+        "notices",
+        "i18n"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/resources/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/resources/page.tsx",
+      "summary": "Public study resources page fetching materials from the API and presenting them with category filtering, with special handling for Naver Cafe links.",
+      "tags": [
+        "component",
+        "resources",
+        "list-view",
+        "i18n"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/resources/page.tsx:ResourcesPage",
+      "type": "function",
+      "name": "ResourcesPage",
+      "filePath": "app/resources/page.tsx",
+      "lineRange": [
+        32,
+        148
+      ],
+      "summary": "Client component rendering filterable study materials list, distinguishing Naver Cafe links to show an appropriate access notice.",
+      "tags": [
+        "component",
+        "resources",
+        "i18n"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/page.tsx",
+      "summary": "Application home page server component that fetches the five most recent pinned-priority notices and renders them in the landing view.",
+      "tags": [
+        "entry-point",
+        "server-component",
+        "home"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/courses/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/courses/page.tsx",
+      "summary": "Public-facing course listing page that fetches courses from the API, supports level filtering tabs (200/300/400/기타), and renders course cards with i18n support.",
+      "tags": [
+        "component",
+        "data-model",
+        "service"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/courses/page.tsx:CoursesPage",
+      "type": "function",
+      "name": "CoursesPage",
+      "filePath": "app/courses/page.tsx",
+      "lineRange": [
+        31,
+        140
+      ],
+      "summary": "Client component displaying filterable mechanical engineering courses organized by academic level with language-aware labels.",
+      "tags": [
+        "component",
+        "service"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:app/globals.css",
+      "type": "file",
+      "name": "globals.css",
+      "filePath": "app/globals.css",
+      "summary": "Global CSS defining the design system's custom Tailwind theme tokens (oklch color palette, radius scale), utility classes (glass-premium, hover-lift-premium, tech-mesh, badge variants), and base resets with dark mode support.",
+      "tags": [
+        "configuration",
+        "design-system",
+        "css",
+        "build-system"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses oklch color space for the color palette and Tailwind CSS v4 @theme inline syntax. Custom animations include dashMove for SVG floor map pathfinding overlays."
+    },
+    {
+      "id": "file:app/admin/(protected)/buildings/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/admin/(protected)/buildings/page.tsx",
+      "summary": "Admin page for managing campus buildings, including CRUD operations for building records and their associated floor data (levels, descriptions, image uploads, and floor map editor integration).",
+      "tags": [
+        "api-handler",
+        "component",
+        "admin",
+        "crud"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/admin/(protected)/buildings/page.tsx:AdminBuildingsPage",
+      "type": "function",
+      "name": "AdminBuildingsPage",
+      "filePath": "app/admin/(protected)/buildings/page.tsx",
+      "lineRange": [
+        30,
+        304
+      ],
+      "summary": "Client component that renders the building management interface with forms for creating/editing buildings, floor management, and launching the FloorMapEditor.",
+      "tags": [
+        "component",
+        "admin",
+        "crud"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/admin/(protected)/courses/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/admin/(protected)/courses/page.tsx",
+      "summary": "Admin client component for managing mechanical engineering course entries with full CRUD: create and edit courses with fields for code, level, name, description, textbook availability, YouTube link, and display order.",
+      "tags": [
+        "component",
+        "admin",
+        "crud",
+        "api-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/admin/(protected)/courses/page.tsx:AdminCoursesPage",
+      "type": "function",
+      "name": "AdminCoursesPage",
+      "filePath": "app/admin/(protected)/courses/page.tsx",
+      "lineRange": [
+        28,
+        180
+      ],
+      "summary": "Admin page component for course management supporting creation, inline editing, deletion, and level categorization with scrollable form reference for smooth UX.",
+      "tags": [
+        "component",
+        "admin",
+        "crud",
+        "form"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:app/admin/(protected)/events/page.tsx",
+      "type": "file",
+      "name": "page.tsx",
+      "filePath": "app/admin/(protected)/events/page.tsx",
+      "summary": "Admin page for managing student council events including CRUD operations, cover image and photo gallery uploads, ZIP download of photos, and feedback review and deletion.",
+      "tags": [
+        "api-handler",
+        "component",
+        "admin",
+        "event-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:app/admin/(protected)/events/page.tsx:AdminEventsPage",
+      "type": "function",
+      "name": "AdminEventsPage",
+      "filePath": "app/admin/(protected)/events/page.tsx",
+      "lineRange": [
+        22,
+        340
+      ],
+      "summary": "Client component orchestrating event creation, photo management, ZIP download via jszip, and feedback moderation with inline dialogs and table views.",
+      "tags": [
+        "component",
+        "admin",
+        "event-handler"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/admin/FloorMapEditor.tsx",
+      "type": "file",
+      "name": "FloorMapEditor.tsx",
+      "filePath": "components/admin/FloorMapEditor.tsx",
+      "summary": "Interactive SVG floor map editor component for drawing room polygons, placing navigation graph nodes/edges, and auto-detecting rooms from uploaded SVG floor plans; persists data via REST API.",
+      "tags": [
+        "component",
+        "admin",
+        "svg",
+        "pathfinding"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses SVG coordinate transformation (createSVGPoint/getScreenCTM) for precise mouse-to-SVG-space mapping during polygon drawing."
+    },
+    {
+      "id": "function:components/admin/FloorMapEditor.tsx:FloorMapEditor",
+      "type": "function",
+      "name": "FloorMapEditor",
+      "filePath": "components/admin/FloorMapEditor.tsx",
+      "lineRange": [
+        80,
+        798
+      ],
+      "summary": "Main editor component managing room polygon drawing mode, graph node/edge placement, SVG/image upload, auto-detection of rooms, and save operations for floor map data.",
+      "tags": [
+        "component",
+        "admin",
+        "svg"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/FloorMapViewer.tsx",
+      "type": "file",
+      "name": "FloorMapViewer.tsx",
+      "filePath": "components/FloorMapViewer.tsx",
+      "summary": "Interactive floor map viewer component that renders SVG floor plans with room polygon highlighting, professor-room associations, and A* pathfinding between navigable rooms.",
+      "tags": [
+        "component",
+        "svg",
+        "pathfinding",
+        "visualization"
+      ],
+      "complexity": "complex",
+      "languageNotes": "Uses react-zoom-pan-pinch for pan/zoom and implements point-in-polygon hit testing for room selection."
+    },
+    {
+      "id": "function:components/FloorMapViewer.tsx:FloorMapViewer",
+      "type": "function",
+      "name": "FloorMapViewer",
+      "filePath": "components/FloorMapViewer.tsx",
+      "lineRange": [
+        81,
+        439
+      ],
+      "summary": "Exported viewer component rendering an interactive SVG map with room highlighting, professor info panels, pathfinding UI, and pan/zoom controls.",
+      "tags": [
+        "component",
+        "svg",
+        "visualization"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/FloorMapViewer.tsx:pointInPolygon",
+      "type": "function",
+      "name": "pointInPolygon",
+      "filePath": "components/FloorMapViewer.tsx",
+      "lineRange": [
+        64,
+        75
+      ],
+      "summary": "Ray-casting algorithm to determine whether a 2D point lies inside a polygon, used for click-based room selection on the floor map.",
+      "tags": [
+        "utility",
+        "geometry",
+        "algorithm"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/ui/button.tsx",
+      "type": "file",
+      "name": "button.tsx",
+      "filePath": "components/ui/button.tsx",
+      "summary": "Shadcn/UI Button component with variant and size support using class-variance-authority, providing default, destructive, outline, ghost, and link styles.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/button.tsx:Button",
+      "type": "function",
+      "name": "Button",
+      "filePath": "components/ui/button.tsx",
+      "lineRange": [
+        45,
+        58
+      ],
+      "summary": "Polymorphic button component applying cva-generated variant/size classes and forwarding all native HTML button props.",
+      "tags": [
+        "component",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/ui/card.tsx",
+      "type": "file",
+      "name": "card.tsx",
+      "filePath": "components/ui/card.tsx",
+      "summary": "Shadcn/UI Card component family (Card, CardHeader, CardTitle, CardDescription, CardAction, CardContent, CardFooter) providing composable container layouts.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn",
+        "layout"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/ui/dialog.tsx",
+      "type": "file",
+      "name": "dialog.tsx",
+      "filePath": "components/ui/dialog.tsx",
+      "summary": "Shadcn/UI Dialog component family wrapping Radix UI Dialog primitives with custom styling for overlay, content, header, footer, title, and description.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn",
+        "modal"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/ui/input.tsx",
+      "type": "file",
+      "name": "input.tsx",
+      "filePath": "components/ui/input.tsx",
+      "summary": "Shadcn/UI Input component providing a styled HTML input element with consistent border, focus ring, and disabled-state styling.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn",
+        "form"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/ui/badge.tsx",
+      "type": "file",
+      "name": "badge.tsx",
+      "filePath": "components/ui/badge.tsx",
+      "summary": "Shadcn/UI Badge component with variant support (default, secondary, destructive, outline) using class-variance-authority for visual status indicators.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/ui/select.tsx",
+      "type": "file",
+      "name": "select.tsx",
+      "filePath": "components/ui/select.tsx",
+      "summary": "Shadcn/UI Select component family wrapping Radix UI Select primitives with full keyboard accessibility, custom styling, and scroll buttons for long option lists.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn",
+        "form"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/ui/table.tsx",
+      "type": "file",
+      "name": "table.tsx",
+      "filePath": "components/ui/table.tsx",
+      "summary": "Shadcn/UI Table component family (Table, TableHeader, TableBody, TableFooter, TableRow, TableHead, TableCell, TableCaption) for rendering styled data tables.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn",
+        "data-display"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/ui/textarea.tsx",
+      "type": "file",
+      "name": "textarea.tsx",
+      "filePath": "components/ui/textarea.tsx",
+      "summary": "Shadcn/UI Textarea component providing a styled multi-line text input with consistent focus and disabled state styling.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn",
+        "form"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/ui/label.tsx",
+      "type": "file",
+      "name": "label.tsx",
+      "filePath": "components/ui/label.tsx",
+      "summary": "Shadcn/UI Label component wrapping a styled HTML label element for accessible form field labeling.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn",
+        "form"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/ui/scroll-area.tsx",
+      "type": "file",
+      "name": "scroll-area.tsx",
+      "filePath": "components/ui/scroll-area.tsx",
+      "summary": "Shadcn/UI ScrollArea component providing a custom-styled scrollable container, likely wrapping Radix UI ScrollArea primitives. File was not present on disk during analysis.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/ui/separator.tsx",
+      "type": "file",
+      "name": "separator.tsx",
+      "filePath": "components/ui/separator.tsx",
+      "summary": "Shadcn/UI Separator component rendering a horizontal or vertical divider line with accessible role and orientation props.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/ui/sheet.tsx",
+      "type": "file",
+      "name": "sheet.tsx",
+      "filePath": "components/ui/sheet.tsx",
+      "summary": "Shadcn/UI Sheet component providing a slide-in panel (drawer) from any screen edge, wrapping Radix UI Dialog primitives with side-specific animations. File was not present on disk during analysis.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn",
+        "modal"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "file:components/ui/slider.tsx",
+      "type": "file",
+      "name": "slider.tsx",
+      "filePath": "components/ui/slider.tsx",
+      "summary": "Shadcn/UI Slider component providing a styled range input built on Radix UI Slider primitives. File was not present on disk during analysis.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn",
+        "form"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/ui/tabs.tsx",
+      "type": "file",
+      "name": "tabs.tsx",
+      "filePath": "components/ui/tabs.tsx",
+      "summary": "Reusable Tabs UI component built on @base-ui-components/react with support for horizontal and vertical orientations and two visual variants (default pill background and borderless line), exporting Tabs, TabsList, TabsTrigger, and TabsContent.",
+      "tags": [
+        "component",
+        "ui",
+        "tabs",
+        "utility"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses class-variance-authority (cva) for variant-based styling and wraps @base-ui-react/tabs primitives, applying data-attribute selectors for orientation-aware layout."
+    },
+    {
+      "id": "file:components/ui/tooltip.tsx",
+      "type": "file",
+      "name": "tooltip.tsx",
+      "filePath": "components/ui/tooltip.tsx",
+      "summary": "Shadcn/UI Tooltip component wrapping Radix UI Tooltip primitives for accessible hover/focus tooltip overlays. File was not present on disk during analysis.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/card.tsx:CardHeader",
+      "type": "function",
+      "name": "CardHeader",
+      "filePath": "components/ui/card.tsx",
+      "lineRange": [
+        23,
+        34
+      ],
+      "summary": "Card header sub-component providing a flex container with vertical spacing for card metadata.",
+      "tags": [
+        "component",
+        "ui",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/card.tsx:CardTitle",
+      "type": "function",
+      "name": "CardTitle",
+      "filePath": "components/ui/card.tsx",
+      "lineRange": [
+        36,
+        47
+      ],
+      "summary": "Card title sub-component rendering a styled heading within a card.",
+      "tags": [
+        "component",
+        "ui"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/card.tsx:CardContent",
+      "type": "function",
+      "name": "CardContent",
+      "filePath": "components/ui/card.tsx",
+      "lineRange": [
+        72,
+        80
+      ],
+      "summary": "Card content sub-component providing the primary body area of a card with consistent padding.",
+      "tags": [
+        "component",
+        "ui",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/dialog.tsx:DialogOverlay",
+      "type": "function",
+      "name": "DialogOverlay",
+      "filePath": "components/ui/dialog.tsx",
+      "lineRange": [
+        26,
+        40
+      ],
+      "summary": "Dialog overlay component rendering a semi-transparent backdrop with fade and zoom animations.",
+      "tags": [
+        "component",
+        "ui",
+        "animation"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/dialog.tsx:DialogHeader",
+      "type": "function",
+      "name": "DialogHeader",
+      "filePath": "components/ui/dialog.tsx",
+      "lineRange": [
+        83,
+        91
+      ],
+      "summary": "Dialog header sub-component providing a flex container for the dialog title and description.",
+      "tags": [
+        "component",
+        "ui",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/dialog.tsx:DialogFooter",
+      "type": "function",
+      "name": "DialogFooter",
+      "filePath": "components/ui/dialog.tsx",
+      "lineRange": [
+        93,
+        118
+      ],
+      "summary": "Dialog footer sub-component with optional close button for action buttons at the bottom of a dialog.",
+      "tags": [
+        "component",
+        "ui",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/dialog.tsx:DialogTitle",
+      "type": "function",
+      "name": "DialogTitle",
+      "filePath": "components/ui/dialog.tsx",
+      "lineRange": [
+        120,
+        131
+      ],
+      "summary": "Accessible dialog title component rendering a visually prominent heading with Radix Dialog.Title semantics.",
+      "tags": [
+        "component",
+        "ui",
+        "accessibility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/select.tsx:SelectTrigger",
+      "type": "function",
+      "name": "SelectTrigger",
+      "filePath": "components/ui/select.tsx",
+      "lineRange": [
+        31,
+        57
+      ],
+      "summary": "Select trigger button component displaying the selected value and a chevron icon, with size variants.",
+      "tags": [
+        "component",
+        "ui",
+        "form"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/select.tsx:SelectContent",
+      "type": "function",
+      "name": "SelectContent",
+      "filePath": "components/ui/select.tsx",
+      "lineRange": [
+        59,
+        96
+      ],
+      "summary": "Select dropdown content container with positioning alignment, offset, and scroll button support.",
+      "tags": [
+        "component",
+        "ui",
+        "form"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/select.tsx:SelectItem",
+      "type": "function",
+      "name": "SelectItem",
+      "filePath": "components/ui/select.tsx",
+      "lineRange": [
+        111,
+        137
+      ],
+      "summary": "Individual select option item with focus/selected state styling and a check indicator.",
+      "tags": [
+        "component",
+        "ui",
+        "form"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/table.tsx:Table",
+      "type": "function",
+      "name": "Table",
+      "filePath": "components/ui/table.tsx",
+      "lineRange": [
+        7,
+        20
+      ],
+      "summary": "Root table component wrapping a scrollable container with consistent width and styling.",
+      "tags": [
+        "component",
+        "ui",
+        "data-display"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/table.tsx:TableRow",
+      "type": "function",
+      "name": "TableRow",
+      "filePath": "components/ui/table.tsx",
+      "lineRange": [
+        55,
+        66
+      ],
+      "summary": "Table row component with hover and selected state styling for interactive data tables.",
+      "tags": [
+        "component",
+        "ui",
+        "data-display"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/table.tsx:TableCell",
+      "type": "function",
+      "name": "TableCell",
+      "filePath": "components/ui/table.tsx",
+      "lineRange": [
+        81,
+        92
+      ],
+      "summary": "Table data cell component with consistent padding and vertical alignment.",
+      "tags": [
+        "component",
+        "ui",
+        "data-display"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/tabs.tsx:Tabs",
+      "type": "function",
+      "name": "Tabs",
+      "filePath": "components/ui/tabs.tsx",
+      "lineRange": [
+        8,
+        24
+      ],
+      "summary": "Root tabs container component that sets orientation via a data attribute and applies flex layout direction based on horizontal or vertical mode.",
+      "tags": [
+        "component",
+        "ui",
+        "tabs"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/tabs.tsx:TabsList",
+      "type": "function",
+      "name": "TabsList",
+      "filePath": "components/ui/tabs.tsx",
+      "lineRange": [
+        41,
+        54
+      ],
+      "summary": "Tabs list wrapper that applies variant-based styling (default muted background pill or transparent line) via cva variants.",
+      "tags": [
+        "component",
+        "ui",
+        "tabs"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/tabs.tsx:TabsTrigger",
+      "type": "function",
+      "name": "TabsTrigger",
+      "filePath": "components/ui/tabs.tsx",
+      "lineRange": [
+        56,
+        70
+      ],
+      "summary": "Individual tab trigger button with active state styling, focus-visible ring, disabled states, and an optional underline indicator for the line variant.",
+      "tags": [
+        "component",
+        "ui",
+        "tabs"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/ui/separator.tsx:Separator",
+      "type": "function",
+      "name": "Separator",
+      "filePath": "components/ui/separator.tsx",
+      "lineRange": [
+        7,
+        23
+      ],
+      "summary": "Accessible separator/divider component with horizontal and vertical orientation support via Radix UI.",
+      "tags": [
+        "component",
+        "ui",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:app/layout.tsx",
+      "type": "file",
+      "name": "layout.tsx",
+      "filePath": "app/layout.tsx",
+      "summary": "Root Next.js layout that sets global metadata (title, description, Open Graph) and wraps all pages with the LayoutWrapper providing theme, language context, Navbar, and Footer.",
+      "tags": [
+        "entry-point",
+        "component",
+        "middleware"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/layout.tsx:RootLayout",
+      "type": "function",
+      "name": "RootLayout",
+      "filePath": "app/layout.tsx",
+      "lineRange": [
+        25,
+        40
+      ],
+      "summary": "Default exported root layout component that renders the HTML shell and delegates child wrapping to LayoutWrapper.",
+      "tags": [
+        "entry-point",
+        "component"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/Footer.tsx",
+      "type": "file",
+      "name": "Footer.tsx",
+      "filePath": "components/Footer.tsx",
+      "summary": "Fully internationalized site footer displaying MESC branding, SNS links, quick navigation links, resource links, and contact information sourced from lib/links.ts with Korean/English toggle via useLanguage.",
+      "tags": [
+        "component",
+        "i18n",
+        "navigation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/Footer.tsx:Footer",
+      "type": "function",
+      "name": "Footer",
+      "filePath": "components/Footer.tsx",
+      "lineRange": [
+        7,
+        204
+      ],
+      "summary": "Renders the site-wide footer with four sections: SNS links, quick links, resource links, and contact info, all translated via the useLanguage hook.",
+      "tags": [
+        "component",
+        "i18n",
+        "navigation"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/Navbar.tsx",
+      "type": "file",
+      "name": "Navbar.tsx",
+      "filePath": "components/Navbar.tsx",
+      "summary": "Responsive top navigation bar with active-route highlighting, a Korean/English language toggle, and a collapsible mobile menu, using usePathname for route awareness.",
+      "tags": [
+        "component",
+        "navigation",
+        "i18n"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "function:components/Navbar.tsx:Navbar",
+      "type": "function",
+      "name": "Navbar",
+      "filePath": "components/Navbar.tsx",
+      "lineRange": [
+        9,
+        155
+      ],
+      "summary": "Client-side navigation component that renders desktop and mobile nav menus with localized link labels and a language switcher.",
+      "tags": [
+        "component",
+        "navigation",
+        "i18n"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "file:components/layout-wrapper.tsx",
+      "type": "file",
+      "name": "layout-wrapper.tsx",
+      "filePath": "components/layout-wrapper.tsx",
+      "summary": "Client boundary wrapper that composes ThemeProvider, LanguageProvider, Navbar, and Footer around page content, serving as the single integration point for all global layout concerns.",
+      "tags": [
+        "component",
+        "middleware",
+        "entry-point"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/layout-wrapper.tsx:LayoutWrapper",
+      "type": "function",
+      "name": "LayoutWrapper",
+      "filePath": "components/layout-wrapper.tsx",
+      "lineRange": [
+        8,
+        18
+      ],
+      "summary": "Wraps children with ThemeProvider and LanguageProvider context, and renders Navbar above and Footer below the page content.",
+      "tags": [
+        "component",
+        "middleware"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "file:components/theme-provider.tsx",
+      "type": "file",
+      "name": "theme-provider.tsx",
+      "filePath": "components/theme-provider.tsx",
+      "summary": "Custom React context-based theme provider that persists light/dark/system preference to localStorage, listens for OS-level prefers-color-scheme changes, and exposes a useTheme hook.",
+      "tags": [
+        "component",
+        "hook",
+        "utility"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Implements the OS media-query change listener pattern to reactively sync theme when the user switches system appearance without a page reload."
+    },
+    {
+      "id": "function:components/theme-provider.tsx:ThemeProvider",
+      "type": "function",
+      "name": "ThemeProvider",
+      "filePath": "components/theme-provider.tsx",
+      "lineRange": [
+        26,
+        67
+      ],
+      "summary": "Context provider that initialises theme from localStorage, applies CSS classes to the document root, and subscribes to prefers-color-scheme media query changes.",
+      "tags": [
+        "component",
+        "singleton"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/theme-provider.tsx:useTheme",
+      "type": "function",
+      "name": "useTheme",
+      "filePath": "components/theme-provider.tsx",
+      "lineRange": [
+        69,
+        75
+      ],
+      "summary": "Custom hook that reads from the ThemeContext and throws if used outside a ThemeProvider.",
+      "tags": [
+        "hook",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:next.config.ts",
+      "type": "config",
+      "name": "next.config.ts",
+      "filePath": "next.config.ts",
+      "summary": "Next.js configuration defining Content Security Policy headers, allowed image domains, and other runtime settings for the MESC website.",
+      "tags": [
+        "configuration",
+        "build-system",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:components/ui/tabs.tsx:TabsContent",
+      "type": "function",
+      "name": "TabsContent",
+      "filePath": "components/ui/tabs.tsx",
+      "lineRange": [
+        72,
+        80
+      ],
+      "summary": "Tab panel content container that fills remaining space and removes default outline.",
+      "tags": [
+        "component",
+        "ui",
+        "tabs"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:AGENTS.md",
+      "type": "document",
+      "name": "AGENTS.md",
+      "filePath": "AGENTS.md",
+      "summary": "Agent-specific instruction file warning that the bundled Next.js version has breaking changes and directing agents to read the guide in node_modules/next/dist/docs/ before writing any code.",
+      "tags": [
+        "documentation",
+        "development",
+        "agents"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:CLAUDE.md",
+      "type": "document",
+      "name": "CLAUDE.md",
+      "filePath": "CLAUDE.md",
+      "summary": "Collaboration instructions for Claude covering design system compliance, code style (Tailwind CSS, shadcn/ui, Next.js App Router), and agent usage rules including mandatory parallel sub-agent usage for complex tasks.",
+      "tags": [
+        "documentation",
+        "development",
+        "configuration"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:CLAUDE_COLLABORATION_GUIDE.md",
+      "type": "document",
+      "name": "CLAUDE_COLLABORATION_GUIDE.md",
+      "filePath": "CLAUDE_COLLABORATION_GUIDE.md",
+      "summary": "Comprehensive full-stack UI/UX collaboration guide for Claude covering design system usage, dark mode implementation, i18n (Korean/English), and layout rules specific to the MESC website.",
+      "tags": [
+        "documentation",
+        "development",
+        "ui-guidelines"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:DESIGN_SYSTEM.md",
+      "type": "document",
+      "name": "DESIGN_SYSTEM.md",
+      "filePath": "DESIGN_SYSTEM.md",
+      "summary": "Comprehensive design system and UI/UX guidelines for the MESC website, defining color palette (CSS custom properties), typography, component guidelines (Navbar, Footer, Card, Button, Badge), custom Tailwind utility classes, animations, and accessibility standards.",
+      "tags": [
+        "documentation",
+        "design-system",
+        "ui-guidelines",
+        "configuration"
+      ],
+      "complexity": "complex"
+    },
+    {
+      "id": "document:README.md",
+      "type": "document",
+      "name": "README.md",
+      "filePath": "README.md",
+      "summary": "Standard Next.js project README covering getting started commands, links to Next.js documentation, and deployment instructions for Vercel.",
+      "tags": [
+        "documentation",
+        "entry-point",
+        "deployment"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "document:memory/MEMORY.md",
+      "type": "document",
+      "name": "MEMORY.md",
+      "filePath": "memory/MEMORY.md",
+      "summary": "Claude agent memory file recording project overview, tech stack (Next.js, Prisma, NextAuth), key configuration files, page structure, important caveats about Prisma v7 + SQLite setup, and confirmed SNS links for the MESC website.",
+      "tags": [
+        "documentation",
+        "configuration",
+        "development"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:memory/project_status.md",
+      "type": "document",
+      "name": "project_status.md",
+      "filePath": "memory/project_status.md",
+      "summary": "Development status tracking document listing completed work (KAIST link updates, i18n, security hardening, admin UI improvements) and remaining tasks (Google Calendar/Sheets integration, privacy/terms pages, build verification, deployment).",
+      "tags": [
+        "documentation",
+        "development",
+        "project-status"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:next-env.d.ts",
+      "type": "config",
+      "name": "next-env.d.ts",
+      "filePath": "next-env.d.ts",
+      "summary": "Auto-generated Next.js TypeScript environment declaration file that includes Next.js type references for Image and Link components; should not be manually edited.",
+      "tags": [
+        "configuration",
+        "typescript",
+        "build-system"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Auto-generated by Next.js; references next/types/global.d.ts and next/image-types/global.d.ts to extend the global TypeScript environment."
+    },
+    {
+      "id": "config:.claude/launch.json",
+      "type": "config",
+      "name": "launch.json",
+      "filePath": ".claude/launch.json",
+      "summary": "Claude Code launch configuration defining version and execution configurations for the project development environment.",
+      "tags": [
+        "configuration",
+        "development",
+        "claude-code"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.claude/settings.local.json",
+      "type": "config",
+      "name": "settings.local.json",
+      "filePath": ".claude/settings.local.json",
+      "summary": "Local Claude Code settings defining permission allowlists for Bash, file read/write, and MCP tool operations specific to this project.",
+      "tags": [
+        "configuration",
+        "claude-code",
+        "permissions",
+        "security"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "config:components.json",
+      "type": "config",
+      "name": "components.json",
+      "filePath": "components.json",
+      "summary": "shadcn/ui configuration specifying the Nova style preset, RSC support, Tailwind CSS integration, path aliases for components and utilities, and the lucide icon library.",
+      "tags": [
+        "configuration",
+        "shadcn-ui",
+        "build-system",
+        "component-library"
+      ],
+      "complexity": "simple",
+      "languageNotes": "The Nova preset and lucide icon library are explicitly configured, enabling the project's design system component generation."
+    },
+    {
+      "id": "config:package.json",
+      "type": "config",
+      "name": "package.json",
+      "filePath": "package.json",
+      "summary": "Project manifest for the MESC website declaring Next.js 16, Prisma v7, NextAuth v5, Recharts, shadcn/ui, and Vercel Blob as primary dependencies with Tailwind CSS 4 and TypeScript 5 for development.",
+      "tags": [
+        "configuration",
+        "build-system",
+        "dependencies",
+        "deployment"
+      ],
+      "complexity": "moderate",
+      "languageNotes": "Uses Prisma v7 with both @prisma/adapter-libsql and @prisma/adapter-better-sqlite3 adapters for flexible SQLite deployment. The postinstall script runs prisma generate automatically."
+    },
+    {
+      "id": "config:tsconfig.json",
+      "type": "config",
+      "name": "tsconfig.json",
+      "filePath": "tsconfig.json",
+      "summary": "TypeScript compiler configuration enabling strict mode, JSX preservation for Next.js, module resolution with path alias @/* mapping to the project root.",
+      "tags": [
+        "configuration",
+        "typescript",
+        "build-system"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:postcss.config.mjs",
+      "type": "config",
+      "name": "postcss.config.mjs",
+      "filePath": "postcss.config.mjs",
+      "summary": "PostCSS configuration enabling the @tailwindcss/postcss plugin for Tailwind CSS v4 processing.",
+      "tags": [
+        "configuration",
+        "build-system",
+        "css"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:eslint.config.mjs",
+      "type": "config",
+      "name": "eslint.config.mjs",
+      "filePath": "eslint.config.mjs",
+      "summary": "ESLint flat configuration extending Next.js core web vitals and TypeScript rules for code quality enforcement.",
+      "tags": [
+        "configuration",
+        "linting",
+        "code-quality"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "config:.gitignore",
+      "type": "config",
+      "name": ".gitignore",
+      "filePath": ".gitignore",
+      "summary": "Git ignore rules excluding Node modules, Next.js build artifacts, environment files, and database files from version control.",
+      "tags": [
+        "configuration",
+        "version-control",
+        "security"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/utils.ts:cn",
+      "type": "function",
+      "name": "cn",
+      "filePath": "lib/utils.ts",
+      "lineRange": [
+        4,
+        6
+      ],
+      "summary": "Merges Tailwind CSS class names using clsx for conditional logic and tailwind-merge to eliminate conflicting utility duplicates.",
+      "tags": [
+        "utility",
+        "tailwind",
+        "class-names"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/validation.ts:isValidString",
+      "type": "function",
+      "name": "isValidString",
+      "filePath": "lib/validation.ts",
+      "lineRange": [
+        25,
+        27
+      ],
+      "summary": "Validates a string is non-empty after trimming and within a configurable maximum length.",
+      "tags": [
+        "validation",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/validation.ts:isValidAmount",
+      "type": "function",
+      "name": "isValidAmount",
+      "filePath": "lib/validation.ts",
+      "lineRange": [
+        32,
+        35
+      ],
+      "summary": "Validates a monetary amount is a finite number within an allowable range.",
+      "tags": [
+        "validation",
+        "utility",
+        "finance"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/validation.ts:isValidDate",
+      "type": "function",
+      "name": "isValidDate",
+      "filePath": "lib/validation.ts",
+      "lineRange": [
+        48,
+        52
+      ],
+      "summary": "Validates a date string by attempting to parse it as a Date object and confirming it is not NaN.",
+      "tags": [
+        "validation",
+        "utility",
+        "date"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:lib/validation.ts:isAllowedCategory",
+      "type": "function",
+      "name": "isAllowedCategory",
+      "filePath": "lib/validation.ts",
+      "lineRange": [
+        57,
+        59
+      ],
+      "summary": "Validates a value against an explicit allowlist of permitted category strings.",
+      "tags": [
+        "validation",
+        "utility"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:app/api/budget/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "app/api/budget/route.ts",
+      "lineRange": [
+        16,
+        62
+      ],
+      "summary": "Creates a new budget item after verifying admin session and validating all fields (date, description, amount, category, receipt URL) before persisting to the database.",
+      "tags": [
+        "api-handler",
+        "validation",
+        "authentication",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "function:app/api/members/route.ts:POST",
+      "type": "function",
+      "name": "POST",
+      "filePath": "app/api/members/route.ts",
+      "lineRange": [
+        13,
+        53
+      ],
+      "summary": "Creates a new member record after verifying admin session and validating name, role, bureau, and photo URL before persisting to the database.",
+      "tags": [
+        "api-handler",
+        "validation",
+        "authentication",
+        "database"
+      ],
+      "complexity": "moderate"
+    },
+    {
+      "id": "document:public/robots.txt",
+      "type": "document",
+      "name": "robots.txt",
+      "filePath": "public/robots.txt",
+      "summary": "Web crawler directive file that disallows indexing of the admin panel and all API routes, and declares the sitemap URL at the Vercel deployment domain.",
+      "tags": [
+        "configuration",
+        "security",
+        "seo",
+        "documentation"
+      ],
+      "complexity": "simple",
+      "languageNotes": "Standard robots.txt protocol: blocks /admin and /api/ from all user-agents and references the production sitemap on mesc-website.vercel.app."
+    },
+    {
+      "id": "function:components/ui/card.tsx:Card",
+      "type": "function",
+      "name": "Card",
+      "filePath": "components/ui/card.tsx",
+      "lineRange": [
+        5,
+        21
+      ],
+      "summary": "Primary Card container component providing a rounded, shadowed flex container with configurable size variants (default/sm) for composable card layouts.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn",
+        "layout"
+      ],
+      "complexity": "simple"
+    },
+    {
+      "id": "function:components/ui/dialog.tsx:DialogContent",
+      "type": "function",
+      "name": "DialogContent",
+      "filePath": "components/ui/dialog.tsx",
+      "lineRange": [
+        42,
+        81
+      ],
+      "summary": "Dialog content popup component wrapping Radix Dialog.Popup with overlay, centered positioning, fade/zoom animations, and an optional close button.",
+      "tags": [
+        "component",
+        "ui",
+        "shadcn",
+        "modal"
+      ],
+      "complexity": "moderate"
+    }
+  ],
+  "edges": [
+    {
+      "source": "file:app/api/snack-wishes/route.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/language-context.tsx",
+      "target": "function:lib/language-context.tsx:LanguageProvider",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/language-context.tsx",
+      "target": "function:lib/language-context.tsx:LanguageProvider",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/language-context.tsx",
+      "target": "function:lib/language-context.tsx:useLanguage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/language-context.tsx",
+      "target": "function:lib/language-context.tsx:useLanguage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/pathfinding.ts",
+      "target": "function:lib/pathfinding.ts:findPath",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/pathfinding.ts",
+      "target": "function:lib/pathfinding.ts:findPath",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/pathfinding.ts",
+      "target": "function:lib/pathfinding.ts:buildAdjacency",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/pathfinding.ts",
+      "target": "function:lib/pathfinding.ts:buildAdjacency",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/pathfinding.ts",
+      "target": "function:lib/pathfinding.ts:parseGraph",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/pathfinding.ts",
+      "target": "function:lib/pathfinding.ts:parseGraph",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/pathfinding.ts",
+      "target": "function:lib/pathfinding.ts:pathToPolylinePoints",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/pathfinding.ts",
+      "target": "function:lib/pathfinding.ts:pathToPolylinePoints",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/pathfinding.ts",
+      "target": "function:lib/pathfinding.ts:polygonCentroid",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/pathfinding.ts",
+      "target": "function:lib/pathfinding.ts:polygonCentroid",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/svg-parser.ts",
+      "target": "function:lib/svg-parser.ts:sanitizeSvg",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/svg-parser.ts",
+      "target": "function:lib/svg-parser.ts:sanitizeSvg",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/svg-parser.ts",
+      "target": "function:lib/svg-parser.ts:detectRoomsAndFacilities",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/svg-parser.ts",
+      "target": "function:lib/svg-parser.ts:detectRoomsAndFacilities",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/svg-parser.ts",
+      "target": "function:lib/svg-parser.ts:detectedRoomsToRegions",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/svg-parser.ts",
+      "target": "function:lib/svg-parser.ts:detectedRoomsToRegions",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/validation.ts",
+      "target": "function:lib/validation.ts:isValidUrl",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/validation.ts",
+      "target": "function:lib/validation.ts:isValidUrl",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/validation.ts",
+      "target": "function:lib/validation.ts:parseId",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/validation.ts",
+      "target": "function:lib/validation.ts:parseId",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "config:prisma.config.ts",
+      "target": "schema:prisma/schema.prisma",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "schema:prisma/schema.prisma",
+      "target": "table:prisma/schema.prisma:Notice",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "schema:prisma/schema.prisma",
+      "target": "table:prisma/schema.prisma:Resource",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "schema:prisma/schema.prisma",
+      "target": "table:prisma/schema.prisma:BudgetItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "schema:prisma/schema.prisma",
+      "target": "table:prisma/schema.prisma:Member",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "schema:prisma/schema.prisma",
+      "target": "table:prisma/schema.prisma:Building",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "schema:prisma/schema.prisma",
+      "target": "table:prisma/schema.prisma:BuildingFloor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "schema:prisma/schema.prisma",
+      "target": "table:prisma/schema.prisma:Professor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "schema:prisma/schema.prisma",
+      "target": "table:prisma/schema.prisma:SnackWish",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "schema:prisma/schema.prisma",
+      "target": "table:prisma/schema.prisma:Event",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "schema:prisma/schema.prisma",
+      "target": "file:lib/prisma.ts",
+      "type": "defines_schema",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:prisma/migrations/20260323000000_init/migration.sql",
+      "target": "table:prisma/schema.prisma:Notice",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:prisma/migrations/20260506141714_add_floor_map_data/migration.sql",
+      "target": "table:prisma/schema.prisma:Building",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:prisma/migrations/20260506141714_add_floor_map_data/migration.sql",
+      "target": "table:prisma/schema.prisma:BuildingFloor",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:prisma/migrations/20260506141714_add_floor_map_data/migration.sql",
+      "target": "table:prisma/schema.prisma:Professor",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:prisma/migrations/20260511042128_add_floor_svg_content/migration.sql",
+      "target": "table:prisma/schema.prisma:BuildingFloor",
+      "type": "migrates",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:lib/prisma.ts",
+      "target": "table:prisma/schema.prisma:Notice",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:lib/prisma.ts",
+      "target": "table:prisma/schema.prisma:Resource",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:lib/prisma.ts",
+      "target": "table:prisma/schema.prisma:BudgetItem",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:app/api/notices/route.ts",
+      "target": "function:lib/validation.ts:isValidUrl",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/api/notices/route.ts",
+      "target": "function:lib/validation.ts:parseId",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/api/resources/route.ts",
+      "target": "function:lib/validation.ts:isValidUrl",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/api/budget/route.ts",
+      "target": "function:lib/validation.ts:isValidUrl",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/api/check-fee/route.ts",
+      "target": "function:app/api/check-fee/route.ts:fetchSheetData",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/api/check-fee/route.ts",
+      "target": "function:app/api/check-fee/route.ts:fetchSheetData",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/floor/[floorId]/page.tsx",
+      "target": "function:app/admin/(protected)/buildings/floor/[floorId]/page.tsx:FloorMapEditorPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/floor/[floorId]/page.tsx",
+      "target": "function:app/admin/(protected)/buildings/floor/[floorId]/page.tsx:FloorMapEditorPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/admin/(protected)/layout.tsx",
+      "target": "function:app/admin/(protected)/layout.tsx:ProtectedAdminLayout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/admin/(protected)/layout.tsx",
+      "target": "function:app/admin/(protected)/layout.tsx:ProtectedAdminLayout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/admin/(protected)/layout.tsx",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/auth/[...nextauth]/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/auth/[...nextauth]/route.ts",
+      "target": "function:app/api/auth/[...nextauth]/route.ts:checkLoginLimit",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/api/buildings/[id]/floors/route.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/buildings/[id]/route.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/buildings/floors/[floorId]/route.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/buildings/route.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/budget/route.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/members/route.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/notices/[id]/route.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/notices/route.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/notices/route.ts",
+      "target": "file:lib/validation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/professors/[id]/route.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/professors/route.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/resources/[id]/route.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/resources/route.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/snack-wishes/[id]/route.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/budget/page.tsx",
+      "target": "function:app/admin/(protected)/budget/page.tsx:AdminBudgetPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/admin/(protected)/budget/page.tsx",
+      "target": "function:app/admin/(protected)/budget/page.tsx:AdminBudgetPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/admin/(protected)/page.tsx",
+      "target": "function:app/admin/(protected)/page.tsx:AdminPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/admin/(protected)/page.tsx",
+      "target": "function:app/admin/(protected)/page.tsx:AdminPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/admin/(protected)/snack-wishes/page.tsx",
+      "target": "function:app/admin/(protected)/snack-wishes/page.tsx:AdminSnackWishesPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/admin/(protected)/snack-wishes/page.tsx",
+      "target": "function:app/admin/(protected)/snack-wishes/page.tsx:AdminSnackWishesPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/admin/(protected)/members/page.tsx",
+      "target": "function:app/admin/(protected)/members/page.tsx:AdminMembersPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/admin/(protected)/members/page.tsx",
+      "target": "function:app/admin/(protected)/members/page.tsx:AdminMembersPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/admin/(protected)/notices/page.tsx",
+      "target": "function:app/admin/(protected)/notices/page.tsx:AdminNoticesPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/admin/(protected)/notices/page.tsx",
+      "target": "function:app/admin/(protected)/notices/page.tsx:AdminNoticesPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/admin/(protected)/resources/page.tsx",
+      "target": "function:app/admin/(protected)/resources/page.tsx:AdminResourcesPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/admin/(protected)/resources/page.tsx",
+      "target": "function:app/admin/(protected)/resources/page.tsx:AdminResourcesPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/admin/(protected)/professors/page.tsx",
+      "target": "function:app/admin/(protected)/professors/page.tsx:AdminProfessorsPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/admin/(protected)/professors/page.tsx",
+      "target": "function:app/admin/(protected)/professors/page.tsx:AdminProfessorsPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/budget/page.tsx",
+      "target": "function:app/budget/page.tsx:BudgetPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/budget/page.tsx",
+      "target": "function:app/budget/page.tsx:BudgetPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/calendar/page.tsx",
+      "target": "function:app/calendar/page.tsx:CalendarPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/calendar/page.tsx",
+      "target": "function:app/calendar/page.tsx:CalendarPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/calendar/page.tsx",
+      "target": "function:app/calendar/page.tsx:formatICalDate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/check-fee/page.tsx",
+      "target": "function:app/check-fee/page.tsx:CheckFeePage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/check-fee/page.tsx",
+      "target": "function:app/check-fee/page.tsx:CheckFeePage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/department-info/page.tsx",
+      "target": "function:app/department-info/page.tsx:DepartmentInfoPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/department-info/page.tsx",
+      "target": "function:app/department-info/page.tsx:DepartmentInfoPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/department-info/page.tsx",
+      "target": "file:app/department-info/department-info-client.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/department-info/department-info-client.tsx",
+      "target": "function:app/department-info/department-info-client.tsx:DepartmentInfoClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/department-info/department-info-client.tsx",
+      "target": "function:app/department-info/department-info-client.tsx:DepartmentInfoClient",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/members/members-client.tsx",
+      "target": "function:app/members/members-client.tsx:MembersClient",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/members/members-client.tsx",
+      "target": "function:app/members/members-client.tsx:MembersClient",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/members/members-client.tsx",
+      "target": "function:app/members/members-client.tsx:MemberCard",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/members/page.tsx",
+      "target": "file:app/members/members-client.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/notices/[id]/page.tsx",
+      "target": "function:app/notices/[id]/page.tsx:NoticeDetailPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/notices/[id]/page.tsx",
+      "target": "function:app/notices/[id]/page.tsx:NoticeDetailPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/notices/page.tsx",
+      "target": "function:app/notices/page.tsx:NoticesPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/notices/page.tsx",
+      "target": "function:app/notices/page.tsx:NoticesPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/resources/page.tsx",
+      "target": "function:app/resources/page.tsx:ResourcesPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/resources/page.tsx",
+      "target": "function:app/resources/page.tsx:ResourcesPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/courses/page.tsx",
+      "target": "function:app/courses/page.tsx:CoursesPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/courses/page.tsx",
+      "target": "function:app/courses/page.tsx:CoursesPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/page.tsx",
+      "target": "function:app/admin/(protected)/buildings/page.tsx:AdminBuildingsPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/page.tsx",
+      "target": "function:app/admin/(protected)/buildings/page.tsx:AdminBuildingsPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/page.tsx",
+      "target": "file:components/ui/dialog.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/page.tsx",
+      "target": "file:components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/page.tsx",
+      "target": "file:components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/page.tsx",
+      "target": "file:components/ui/select.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/page.tsx",
+      "target": "file:components/ui/table.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/page.tsx",
+      "target": "file:components/ui/textarea.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/page.tsx",
+      "target": "file:components/ui/label.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/page.tsx",
+      "target": "file:components/admin/FloorMapEditor.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/courses/page.tsx",
+      "target": "function:app/admin/(protected)/courses/page.tsx:AdminCoursesPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/admin/(protected)/courses/page.tsx",
+      "target": "function:app/admin/(protected)/courses/page.tsx:AdminCoursesPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/admin/(protected)/courses/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/courses/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/courses/page.tsx",
+      "target": "file:components/ui/dialog.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/courses/page.tsx",
+      "target": "file:components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/courses/page.tsx",
+      "target": "file:components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/courses/page.tsx",
+      "target": "file:components/ui/select.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/courses/page.tsx",
+      "target": "file:components/ui/table.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/courses/page.tsx",
+      "target": "file:components/ui/textarea.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/courses/page.tsx",
+      "target": "file:components/ui/label.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/events/page.tsx",
+      "target": "function:app/admin/(protected)/events/page.tsx:AdminEventsPage",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/admin/(protected)/events/page.tsx",
+      "target": "function:app/admin/(protected)/events/page.tsx:AdminEventsPage",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/admin/(protected)/events/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/events/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/events/page.tsx",
+      "target": "file:components/ui/dialog.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/events/page.tsx",
+      "target": "file:components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/events/page.tsx",
+      "target": "file:components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/events/page.tsx",
+      "target": "file:components/ui/select.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/events/page.tsx",
+      "target": "file:components/ui/table.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/events/page.tsx",
+      "target": "file:components/ui/textarea.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/admin/(protected)/events/page.tsx",
+      "target": "file:components/ui/label.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "function:components/admin/FloorMapEditor.tsx:FloorMapEditor",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "function:components/admin/FloorMapEditor.tsx:FloorMapEditor",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "file:components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "file:components/ui/label.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "file:components/ui/select.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "file:components/ui/slider.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "file:components/ui/tabs.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "file:components/ui/tooltip.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "file:components/ui/scroll-area.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "file:components/ui/separator.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "file:components/FloorMapViewer.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/FloorMapViewer.tsx",
+      "target": "function:components/FloorMapViewer.tsx:FloorMapViewer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/FloorMapViewer.tsx",
+      "target": "function:components/FloorMapViewer.tsx:pointInPolygon",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/FloorMapViewer.tsx",
+      "target": "function:components/FloorMapViewer.tsx:FloorMapViewer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/button.tsx",
+      "target": "function:components/ui/button.tsx:Button",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/button.tsx",
+      "target": "function:components/ui/button.tsx:Button",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/card.tsx",
+      "target": "function:components/ui/card.tsx:CardHeader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/card.tsx",
+      "target": "function:components/ui/card.tsx:CardTitle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/card.tsx",
+      "target": "function:components/ui/card.tsx:CardContent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/card.tsx",
+      "target": "function:components/ui/card.tsx:CardHeader",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/card.tsx",
+      "target": "function:components/ui/card.tsx:CardTitle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/card.tsx",
+      "target": "function:components/ui/card.tsx:CardContent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/dialog.tsx",
+      "target": "function:components/ui/dialog.tsx:DialogOverlay",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/dialog.tsx",
+      "target": "function:components/ui/dialog.tsx:DialogHeader",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/dialog.tsx",
+      "target": "function:components/ui/dialog.tsx:DialogFooter",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/dialog.tsx",
+      "target": "function:components/ui/dialog.tsx:DialogTitle",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/dialog.tsx",
+      "target": "function:components/ui/dialog.tsx:DialogOverlay",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/dialog.tsx",
+      "target": "function:components/ui/dialog.tsx:DialogHeader",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/dialog.tsx",
+      "target": "function:components/ui/dialog.tsx:DialogFooter",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/dialog.tsx",
+      "target": "function:components/ui/dialog.tsx:DialogTitle",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/select.tsx",
+      "target": "function:components/ui/select.tsx:SelectTrigger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/select.tsx",
+      "target": "function:components/ui/select.tsx:SelectContent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/select.tsx",
+      "target": "function:components/ui/select.tsx:SelectItem",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/select.tsx",
+      "target": "function:components/ui/select.tsx:SelectTrigger",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/select.tsx",
+      "target": "function:components/ui/select.tsx:SelectContent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/select.tsx",
+      "target": "function:components/ui/select.tsx:SelectItem",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/table.tsx",
+      "target": "function:components/ui/table.tsx:Table",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/table.tsx",
+      "target": "function:components/ui/table.tsx:TableRow",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/table.tsx",
+      "target": "function:components/ui/table.tsx:TableCell",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/table.tsx",
+      "target": "function:components/ui/table.tsx:Table",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/table.tsx",
+      "target": "function:components/ui/table.tsx:TableRow",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/table.tsx",
+      "target": "function:components/ui/table.tsx:TableCell",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/tabs.tsx",
+      "target": "function:components/ui/tabs.tsx:Tabs",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/tabs.tsx",
+      "target": "function:components/ui/tabs.tsx:TabsList",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/tabs.tsx",
+      "target": "function:components/ui/tabs.tsx:TabsTrigger",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/tabs.tsx",
+      "target": "function:components/ui/tabs.tsx:Tabs",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/tabs.tsx",
+      "target": "function:components/ui/tabs.tsx:TabsList",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/tabs.tsx",
+      "target": "function:components/ui/tabs.tsx:TabsTrigger",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/separator.tsx",
+      "target": "function:components/ui/separator.tsx:Separator",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/separator.tsx",
+      "target": "function:components/ui/separator.tsx:Separator",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/layout.tsx",
+      "target": "file:app/globals.css",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/layout.tsx",
+      "target": "file:components/layout-wrapper.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/layout.tsx",
+      "target": "function:app/layout.tsx:RootLayout",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/layout.tsx",
+      "target": "function:app/layout.tsx:RootLayout",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/Footer.tsx",
+      "target": "file:lib/links.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/Footer.tsx",
+      "target": "file:lib/language-context.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/Footer.tsx",
+      "target": "function:components/Footer.tsx:Footer",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/Footer.tsx",
+      "target": "function:components/Footer.tsx:Footer",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/Navbar.tsx",
+      "target": "file:lib/links.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/Navbar.tsx",
+      "target": "file:lib/language-context.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/Navbar.tsx",
+      "target": "function:components/Navbar.tsx:Navbar",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/Navbar.tsx",
+      "target": "function:components/Navbar.tsx:Navbar",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout-wrapper.tsx",
+      "target": "file:components/Navbar.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout-wrapper.tsx",
+      "target": "file:components/Footer.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout-wrapper.tsx",
+      "target": "file:components/theme-provider.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout-wrapper.tsx",
+      "target": "file:lib/language-context.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:components/layout-wrapper.tsx",
+      "target": "function:components/layout-wrapper.tsx:LayoutWrapper",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/layout-wrapper.tsx",
+      "target": "function:components/layout-wrapper.tsx:LayoutWrapper",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout-wrapper.tsx",
+      "target": "function:components/Navbar.tsx:Navbar",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout-wrapper.tsx",
+      "target": "function:components/Footer.tsx:Footer",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/layout-wrapper.tsx",
+      "target": "function:components/theme-provider.tsx:ThemeProvider",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/theme-provider.tsx",
+      "target": "function:components/theme-provider.tsx:ThemeProvider",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/theme-provider.tsx",
+      "target": "function:components/theme-provider.tsx:useTheme",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/theme-provider.tsx",
+      "target": "function:components/theme-provider.tsx:ThemeProvider",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/theme-provider.tsx",
+      "target": "function:components/theme-provider.tsx:useTheme",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "config:next.config.ts",
+      "target": "file:app/layout.tsx",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:app/members/page.tsx",
+      "target": "function:app/members/members-client.tsx:MembersClient",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/members/members-client.tsx:MembersClient",
+      "target": "file:lib/links.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "function:app/members/members-client.tsx:MembersClient",
+      "target": "file:components/ui/tabs.tsx",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:components/ui/tabs.tsx",
+      "target": "function:components/ui/tabs.tsx:TabsContent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/tabs.tsx",
+      "target": "function:components/ui/tabs.tsx:TabsContent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "document:CLAUDE.md",
+      "target": "document:DESIGN_SYSTEM.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:CLAUDE_COLLABORATION_GUIDE.md",
+      "target": "document:DESIGN_SYSTEM.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:README.md",
+      "target": "file:app/page.tsx",
+      "type": "documents",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "document:memory/project_status.md",
+      "target": "document:memory/MEMORY.md",
+      "type": "related",
+      "direction": "forward",
+      "weight": 0.5
+    },
+    {
+      "source": "config:tsconfig.json",
+      "target": "file:lib/utils.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:tsconfig.json",
+      "target": "file:lib/validation.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:tsconfig.json",
+      "target": "file:app/api/budget/route.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:tsconfig.json",
+      "target": "file:app/api/members/route.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:package.json",
+      "target": "file:lib/utils.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:prisma.config.ts",
+      "target": "file:lib/prisma.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "config:components.json",
+      "target": "file:lib/utils.ts",
+      "type": "configures",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:lib/utils.ts",
+      "target": "function:lib/utils.ts:cn",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/utils.ts",
+      "target": "function:lib/utils.ts:cn",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/validation.ts",
+      "target": "function:lib/validation.ts:isValidString",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/validation.ts",
+      "target": "function:lib/validation.ts:isValidString",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/validation.ts",
+      "target": "function:lib/validation.ts:isValidAmount",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/validation.ts",
+      "target": "function:lib/validation.ts:isValidAmount",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/validation.ts",
+      "target": "function:lib/validation.ts:isValidDate",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/validation.ts",
+      "target": "function:lib/validation.ts:isValidDate",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:lib/validation.ts",
+      "target": "function:lib/validation.ts:isAllowedCategory",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:lib/validation.ts",
+      "target": "function:lib/validation.ts:isAllowedCategory",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/api/budget/route.ts",
+      "target": "file:lib/validation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/budget/route.ts",
+      "target": "function:app/api/budget/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/api/budget/route.ts",
+      "target": "function:app/api/budget/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/api/budget/route.ts:POST",
+      "target": "function:lib/validation.ts:isValidDate",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/api/budget/route.ts:POST",
+      "target": "function:lib/validation.ts:isValidString",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/api/budget/route.ts:POST",
+      "target": "function:lib/validation.ts:isValidAmount",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/api/budget/route.ts:POST",
+      "target": "function:lib/validation.ts:isAllowedCategory",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/api/budget/route.ts:POST",
+      "target": "function:lib/validation.ts:isValidUrl",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/api/members/route.ts",
+      "target": "file:lib/validation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7
+    },
+    {
+      "source": "file:app/api/members/route.ts",
+      "target": "function:app/api/members/route.ts:POST",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:app/api/members/route.ts",
+      "target": "function:app/api/members/route.ts:POST",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/api/members/route.ts:POST",
+      "target": "function:lib/validation.ts:isValidString",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "function:app/api/members/route.ts:POST",
+      "target": "function:lib/validation.ts:isValidUrl",
+      "type": "calls",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:app/admin/(protected)/members/page.tsx",
+      "target": "file:app/api/members/route.ts",
+      "type": "depends_on",
+      "direction": "forward",
+      "weight": 0.6
+    },
+    {
+      "source": "file:app/admin/(protected)/budget/page.tsx",
+      "target": "file:components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/budget/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/budget/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/budget/page.tsx",
+      "target": "file:components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/budget/page.tsx",
+      "target": "file:components/ui/label.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/budget/page.tsx",
+      "target": "file:components/ui/select.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/floor/[floorId]/page.tsx",
+      "target": "file:components/admin/FloorMapEditor.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/floor/[floorId]/page.tsx",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/buildings/floor/[floorId]/page.tsx",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/members/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/members/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/members/page.tsx",
+      "target": "file:components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/members/page.tsx",
+      "target": "file:components/ui/label.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/notices/page.tsx",
+      "target": "file:components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/notices/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/notices/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/notices/page.tsx",
+      "target": "file:components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/notices/page.tsx",
+      "target": "file:components/ui/label.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/notices/page.tsx",
+      "target": "file:components/ui/select.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/notices/page.tsx",
+      "target": "file:components/ui/textarea.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/page.tsx",
+      "target": "file:components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/page.tsx",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/professors/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/professors/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/professors/page.tsx",
+      "target": "file:components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/professors/page.tsx",
+      "target": "file:components/ui/label.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/resources/page.tsx",
+      "target": "file:components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/resources/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/resources/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/resources/page.tsx",
+      "target": "file:components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/resources/page.tsx",
+      "target": "file:components/ui/label.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/resources/page.tsx",
+      "target": "file:components/ui/select.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/resources/page.tsx",
+      "target": "file:components/ui/textarea.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/snack-wishes/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/admin/(protected)/snack-wishes/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/budget/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/buildings/[id]/floors/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/buildings/[id]/floors/route.ts",
+      "target": "file:lib/validation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/buildings/[id]/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/buildings/[id]/route.ts",
+      "target": "file:lib/validation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/buildings/floors/[floorId]/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/buildings/floors/[floorId]/route.ts",
+      "target": "file:lib/validation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/buildings/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/members/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/notices/[id]/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/notices/[id]/route.ts",
+      "target": "file:lib/validation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/notices/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/professors/[id]/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/professors/[id]/route.ts",
+      "target": "file:lib/validation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/professors/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/resources/[id]/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/resources/[id]/route.ts",
+      "target": "file:lib/validation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/resources/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/resources/route.ts",
+      "target": "file:lib/validation.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/snack-wishes/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/api/upload/route.ts",
+      "target": "file:lib/auth.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/budget/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/budget/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/budget/page.tsx",
+      "target": "file:lib/language-context.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/calendar/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/calendar/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/calendar/page.tsx",
+      "target": "file:lib/language-context.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/check-fee/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/check-fee/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/check-fee/page.tsx",
+      "target": "file:components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/check-fee/page.tsx",
+      "target": "file:components/ui/label.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/check-fee/page.tsx",
+      "target": "file:lib/language-context.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/courses/page.tsx",
+      "target": "file:components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/courses/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/courses/page.tsx",
+      "target": "file:lib/language-context.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/department-info/department-info-client.tsx",
+      "target": "file:components/FloorMapViewer.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/department-info/department-info-client.tsx",
+      "target": "file:components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/department-info/department-info-client.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/department-info/department-info-client.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/department-info/department-info-client.tsx",
+      "target": "file:components/ui/input.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/department-info/department-info-client.tsx",
+      "target": "file:lib/language-context.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/department-info/page.tsx",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/members/members-client.tsx",
+      "target": "file:components/ui/tabs.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/members/members-client.tsx",
+      "target": "file:lib/language-context.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/members/members-client.tsx",
+      "target": "file:lib/links.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/members/page.tsx",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/notices/[id]/page.tsx",
+      "target": "file:components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/notices/[id]/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/notices/[id]/page.tsx",
+      "target": "file:lib/language-context.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/notices/page.tsx",
+      "target": "file:components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/notices/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/notices/page.tsx",
+      "target": "file:components/ui/tabs.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/notices/page.tsx",
+      "target": "file:lib/language-context.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/page.tsx",
+      "target": "file:lib/prisma.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/resources/page.tsx",
+      "target": "file:components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/resources/page.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/resources/page.tsx",
+      "target": "file:components/ui/card.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/resources/page.tsx",
+      "target": "file:components/ui/tabs.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:app/resources/page.tsx",
+      "target": "file:lib/language-context.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "file:components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "file:lib/pathfinding.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/admin/FloorMapEditor.tsx",
+      "target": "file:lib/svg-parser.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/FloorMapViewer.tsx",
+      "target": "file:components/ui/badge.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/FloorMapViewer.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/FloorMapViewer.tsx",
+      "target": "file:components/ui/dialog.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/FloorMapViewer.tsx",
+      "target": "file:lib/pathfinding.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/FloorMapViewer.tsx",
+      "target": "file:lib/svg-parser.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/Navbar.tsx",
+      "target": "file:lib/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/ui/badge.tsx",
+      "target": "file:lib/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/ui/button.tsx",
+      "target": "file:lib/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/ui/card.tsx",
+      "target": "file:lib/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/ui/dialog.tsx",
+      "target": "file:components/ui/button.tsx",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/ui/dialog.tsx",
+      "target": "file:lib/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/ui/input.tsx",
+      "target": "file:lib/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/ui/label.tsx",
+      "target": "file:lib/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/ui/select.tsx",
+      "target": "file:lib/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/ui/separator.tsx",
+      "target": "file:lib/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/ui/table.tsx",
+      "target": "file:lib/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/ui/tabs.tsx",
+      "target": "file:lib/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/ui/textarea.tsx",
+      "target": "file:lib/utils.ts",
+      "type": "imports",
+      "direction": "forward",
+      "weight": 0.7,
+      "recoveredFromImportMap": true
+    },
+    {
+      "source": "file:components/ui/card.tsx",
+      "target": "function:components/ui/card.tsx:Card",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/card.tsx",
+      "target": "function:components/ui/card.tsx:Card",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    },
+    {
+      "source": "file:components/ui/dialog.tsx",
+      "target": "function:components/ui/dialog.tsx:DialogContent",
+      "type": "contains",
+      "direction": "forward",
+      "weight": 1.0
+    },
+    {
+      "source": "file:components/ui/dialog.tsx",
+      "target": "function:components/ui/dialog.tsx:DialogContent",
+      "type": "exports",
+      "direction": "forward",
+      "weight": 0.8
+    }
+  ],
+  "layers": [
+    {
+      "id": "layer:api",
+      "name": "API Layer",
+      "description": "Next.js App Router REST API route handlers for all resources — notices, buildings, professors, budget, upload, auth, and snack wishes — serving both public and admin clients.",
+      "nodeIds": [
+        "file:app/api/auth/[...nextauth]/route.ts",
+        "file:app/api/buildings/[id]/floors/route.ts",
+        "file:app/api/buildings/[id]/route.ts",
+        "file:app/api/buildings/floors/[floorId]/route.ts",
+        "file:app/api/buildings/route.ts",
+        "file:app/api/check-fee/route.ts",
+        "file:app/api/notices/[id]/route.ts",
+        "file:app/api/notices/route.ts",
+        "file:app/api/professors/[id]/route.ts",
+        "file:app/api/professors/route.ts",
+        "file:app/api/resources/[id]/route.ts",
+        "file:app/api/resources/route.ts",
+        "file:app/api/snack-wishes/[id]/route.ts",
+        "file:app/api/snack-wishes/route.ts",
+        "file:app/api/upload/route.ts",
+        "file:app/api/budget/route.ts",
+        "file:app/api/members/route.ts"
+      ]
+    },
+    {
+      "id": "layer:admin",
+      "name": "Admin Panel",
+      "description": "Password-protected admin dashboard with CRUD management pages for notices, resources, budget, professors, buildings, floor maps, members, courses, events, and snack wishes.",
+      "nodeIds": [
+        "file:app/admin/(protected)/buildings/floor/[floorId]/page.tsx",
+        "file:app/admin/(protected)/layout.tsx",
+        "file:app/admin/(protected)/budget/page.tsx",
+        "file:app/admin/(protected)/page.tsx",
+        "file:app/admin/(protected)/snack-wishes/page.tsx",
+        "file:app/admin/(protected)/notices/page.tsx",
+        "file:app/admin/(protected)/resources/page.tsx",
+        "file:app/admin/(protected)/professors/page.tsx",
+        "file:app/admin/(protected)/buildings/page.tsx",
+        "file:app/admin/(protected)/members/page.tsx",
+        "file:app/admin/(protected)/courses/page.tsx",
+        "file:app/admin/(protected)/events/page.tsx",
+        "file:components/admin/FloorMapEditor.tsx"
+      ]
+    },
+    {
+      "id": "layer:public-pages",
+      "name": "Public Pages",
+      "description": "Student-facing Next.js pages for the MESC website — home, notices, calendar, budget, check-fee, department info, members, resources, courses, events, and snack wishes — plus the root layout and error pages.",
+      "nodeIds": [
+        "file:app/layout.tsx",
+        "file:app/page.tsx",
+        "file:app/department-info/page.tsx",
+        "file:app/department-info/department-info-client.tsx",
+        "file:app/members/members-client.tsx",
+        "file:app/members/page.tsx",
+        "file:app/notices/[id]/page.tsx",
+        "file:app/notices/page.tsx",
+        "file:app/resources/page.tsx",
+        "file:app/calendar/page.tsx",
+        "file:app/budget/page.tsx",
+        "file:app/check-fee/page.tsx",
+        "file:app/courses/page.tsx",
+        "file:app/globals.css"
+      ]
+    },
+    {
+      "id": "layer:ui-components",
+      "name": "UI Components",
+      "description": "Reusable React components providing site-wide layout (Navbar, Footer), theme and language context providers, and the interactive FloorMapViewer for building navigation.",
+      "nodeIds": [
+        "file:components/FloorMapViewer.tsx",
+        "file:components/Footer.tsx",
+        "file:components/Navbar.tsx",
+        "file:components/layout-wrapper.tsx",
+        "file:components/theme-provider.tsx",
+        "file:components/ui/button.tsx",
+        "file:components/ui/card.tsx",
+        "file:components/ui/dialog.tsx",
+        "file:components/ui/input.tsx",
+        "file:components/ui/badge.tsx",
+        "file:components/ui/select.tsx",
+        "file:components/ui/table.tsx",
+        "file:components/ui/textarea.tsx",
+        "file:components/ui/label.tsx",
+        "file:components/ui/scroll-area.tsx",
+        "file:components/ui/separator.tsx",
+        "file:components/ui/sheet.tsx",
+        "file:components/ui/slider.tsx",
+        "file:components/ui/tabs.tsx",
+        "file:components/ui/tooltip.tsx"
+      ]
+    },
+    {
+      "id": "layer:service",
+      "name": "Service & Utility Layer",
+      "description": "Core library modules providing the Prisma database client, NextAuth authentication, Dijkstra pathfinding for floor maps, SVG parsing/sanitization, i18n context, input validation, and shared utility helpers.",
+      "nodeIds": [
+        "file:lib/auth.ts",
+        "file:lib/language-context.tsx",
+        "file:lib/pathfinding.ts",
+        "file:lib/prisma.ts",
+        "file:lib/svg-parser.ts",
+        "file:lib/utils.ts",
+        "file:lib/validation.ts",
+        "file:lib/links.ts"
+      ]
+    },
+    {
+      "id": "layer:data",
+      "name": "Data Layer",
+      "description": "Prisma schema and database model definitions for all 13 entities — notices, resources, budget items, snack wishes, buildings, floor maps, and professors — backed by Turso/libSQL.",
+      "nodeIds": [
+        "schema:prisma/schema.prisma",
+        "table:prisma/schema.prisma:Notice",
+        "table:prisma/schema.prisma:Resource",
+        "table:prisma/schema.prisma:BudgetItem",
+        "table:prisma/schema.prisma:SnackWish",
+        "table:prisma/schema.prisma:Building",
+        "table:prisma/schema.prisma:BuildingFloor",
+        "table:prisma/schema.prisma:Professor",
+        "table:prisma/schema.prisma:Member",
+        "table:prisma/schema.prisma:Event",
+        "table:prisma/migrations/20260323000000_init/migration.sql:Notice",
+        "file:prisma/migrations/20260323000000_init/migration.sql",
+        "file:prisma/migrations/20260506141714_add_floor_map_data/migration.sql",
+        "file:prisma/migrations/20260511042128_add_floor_svg_content/migration.sql",
+        "file:prisma/migrations/migration_lock.toml"
+      ]
+    },
+    {
+      "id": "layer:config-and-docs",
+      "name": "Configuration & Documentation",
+      "description": "Project configuration files (Next.js, Prisma, TypeScript, shadcn/ui, package.json), Claude Code workspace settings, and documentation including the design system guide, agent changelog, and robots.txt.",
+      "nodeIds": [
+        "config:next.config.ts",
+        "config:prisma.config.ts",
+        "config:package.json",
+        "config:tsconfig.json",
+        "config:components.json",
+        "config:.claude/settings.local.json",
+        "config:.claude/launch.json",
+        "config:next-env.d.ts",
+        "document:AGENTS.md",
+        "document:CLAUDE.md",
+        "document:DESIGN_SYSTEM.md",
+        "document:README.md",
+        "document:public/robots.txt",
+        "document:CLAUDE_COLLABORATION_GUIDE.md",
+        "document:memory/MEMORY.md",
+        "document:memory/project_status.md",
+        "config:postcss.config.mjs",
+        "config:eslint.config.mjs",
+        "config:.gitignore"
+      ]
+    }
+  ],
+  "tour": [
+    {
+      "order": 1,
+      "title": "애플리케이션 진입점",
+      "description": "루트 레이아웃인 app/layout.tsx는 모든 페이지가 공유하는 최상위 래퍼입니다. 폰트 로딩, ThemeProvider, LanguageProvider를 초기화하며 Navbar와 Footer를 여기서 마운트합니다. Next.js App Router에서 layout.tsx는 한 번 렌더링되어 하위 페이지 전체를 감싸기 때문에, 이 파일을 이해하면 사이트 전체 구조가 한눈에 보입니다.",
+      "nodeIds": [
+        "file:app/layout.tsx"
+      ],
+      "languageLesson": "Next.js App Router의 layout.tsx는 React의 children prop을 통해 하위 page.tsx를 감쌉니다. Server Component로 동작하므로 DB 쿼리나 인증 로직을 서버에서 처리할 수 있으며, 'use client' 지시어가 없으면 기본적으로 서버 컴포넌트입니다."
+    },
+    {
+      "order": 2,
+      "title": "글로벌 스타일 시스템",
+      "description": "app/globals.css는 Tailwind CSS 위에 프로젝트 고유의 디자인 토큰을 정의합니다. oklch 색상 공간 기반의 --primary, --accent 변수와 glass-premium, tech-mesh, hover-lift-premium 같은 커스텀 유틸리티 클래스, 그리고 dashMove 애니메이션이 여기에 선언됩니다. layout.tsx가 이 파일을 임포트하므로 모든 페이지에 자동 적용됩니다.",
+      "nodeIds": [
+        "file:app/globals.css"
+      ],
+      "languageLesson": "CSS oklch(lightness chroma hue) 색상 모델은 sRGB보다 지각적으로 균일한 색상 표현을 제공합니다. Tailwind의 @layer utilities 블록 안에 정의된 클래스는 빌드 시 purge되지 않고 보존됩니다."
+    },
+    {
+      "order": 3,
+      "title": "디자인 시스템 문서",
+      "description": "DESIGN_SYSTEM.md는 globals.css에 정의된 색상 토큰과 유틸리티 클래스의 사용 지침을 담은 설계 문서입니다. 컬러 팔레트, 타이포그래피 규칙, 컴포넌트별 스타일 가이드라인, 애니메이션 원칙이 기술되어 있습니다. 새 UI 요소를 추가할 때 반드시 이 문서를 먼저 참조해야 코드 전체의 시각적 일관성을 유지할 수 있습니다.",
+      "nodeIds": [
+        "document:DESIGN_SYSTEM.md"
+      ]
+    },
+    {
+      "order": 4,
+      "title": "다국어(i18n) 컨텍스트",
+      "description": "lib/language-context.tsx는 한국어/영어 전환을 관리하는 React Context입니다. 선택한 언어는 localStorage에 저장되어 새로고침 후에도 유지됩니다. fan-in이 4로 가장 높은 유틸리티 중 하나로, Navbar, Footer, 부서 정보 클라이언트 페이지 등 여러 컴포넌트가 이 컨텍스트를 구독합니다.",
+      "nodeIds": [
+        "file:lib/language-context.tsx"
+      ],
+      "languageLesson": "React Context의 createContext + useContext 패턴은 prop drilling 없이 전역 상태를 공유합니다. 'use client' 경계에서만 사용 가능하므로, 서버 컴포넌트에서는 컨텍스트를 직접 읽을 수 없습니다."
+    },
+    {
+      "order": 5,
+      "title": "레이아웃 컴포넌트",
+      "description": "Navbar.tsx와 Footer.tsx는 layout.tsx에 마운트되어 모든 페이지에 나타나는 공통 UI 쉘입니다. Navbar는 모바일 메뉴와 i18n 토글을 포함하고, Footer는 KAIST 관련 외부 링크와 언어 전환 버튼을 제공합니다. 두 컴포넌트 모두 language-context에서 현재 언어를 읽어 텍스트를 렌더링합니다.",
+      "nodeIds": [
+        "file:components/Navbar.tsx",
+        "file:components/Footer.tsx"
+      ]
+    },
+    {
+      "order": 6,
+      "title": "데이터베이스 스키마",
+      "description": "prisma/schema.prisma는 전체 데이터 모델의 단일 진실 원천(single source of truth)입니다. Notice, Resource, Building, BuildingFloor, Professor 등 13개 모델이 정의되어 있으며, 이후 등장하는 모든 API와 서버 컴포넌트가 이 스키마를 기반으로 데이터를 읽고 씁니다. 스키마를 먼저 파악하면 각 API가 어떤 데이터를 다루는지 즉시 이해할 수 있습니다.",
+      "nodeIds": [
+        "schema:prisma/schema.prisma"
+      ],
+      "languageLesson": "Prisma 스키마의 model 블록은 TypeScript 타입으로 자동 생성됩니다. @relation 지시어는 외래 키 관계를 선언하며, Prisma Client는 이를 바탕으로 include/select로 관계 데이터를 조인합니다."
+    },
+    {
+      "order": 7,
+      "title": "Prisma 클라이언트 설정",
+      "description": "lib/prisma.ts는 싱글턴 패턴으로 Prisma Client 인스턴스를 생성합니다. Turso(클라우드 libSQL)에 연결하기 위해 @prisma/adapter-libsql을 사용하며, prisma.config.ts에서 데이터소스 URL을 읽습니다. fan-in이 6으로 전체 코드베이스에서 가장 많이 임포트되는 파일로, 모든 데이터 접근의 허브 역할을 합니다.",
+      "nodeIds": [
+        "file:lib/prisma.ts",
+        "config:prisma.config.ts"
+      ],
+      "languageLesson": "Next.js의 Hot Module Replacement 환경에서 매 모듈 reload마다 새 DB 연결이 생기는 것을 방지하기 위해 globalThis에 인스턴스를 캐싱하는 싱글턴 패턴을 사용합니다. Prisma v7은 schema.prisma에 datasource url 필드를 직접 쓰지 않고 prisma.config.ts에서 관리합니다."
+    },
+    {
+      "order": 8,
+      "title": "인증 시스템",
+      "description": "lib/auth.ts는 NextAuth.js v5의 Credentials Provider를 구성합니다. 관리자 아이디/비밀번호를 환경 변수에서 검증하고, 성공 시 JWT 세션을 발급합니다. fan-in이 3으로 관리자 레이아웃, 관리자 대시보드, 파일 업로드 API가 이 모듈에 의존합니다.",
+      "nodeIds": [
+        "file:lib/auth.ts"
+      ],
+      "languageLesson": "NextAuth v5는 Auth.js로도 불리며, 이전 버전과 달리 Edge Runtime을 지원합니다. JWT 전략을 쓰면 DB 없이 세션 검증이 가능하며, getServerSession 대신 auth() 헬퍼로 서버 컴포넌트에서 세션을 읽습니다."
+    },
+    {
+      "order": 9,
+      "title": "홈 페이지",
+      "description": "app/page.tsx는 학생들이 처음 마주치는 메인 페이지입니다. lib/prisma.ts를 통해 최신 공지사항을 서버에서 쿼리하고 정적으로 렌더링하며, 자주 사용하는 링크들을 빠른 접근 버튼으로 배치합니다. 서버 컴포넌트로 동작하기 때문에 추가적인 API 요청 없이 초기 HTML에 데이터가 포함됩니다.",
+      "nodeIds": [
+        "file:app/page.tsx"
+      ]
+    },
+    {
+      "order": 10,
+      "title": "공지사항 API & 페이지",
+      "description": "app/api/notices/route.ts는 REST API 엔드포인트로, 공개 GET 요청은 누구나 접근할 수 있지만 POST(공지 등록)는 관리자 인증이 필요합니다. lib/validation.ts를 통해 입력값을 검증한 뒤 Prisma로 DB에 저장합니다. app/notices/page.tsx는 이 API와 같은 Prisma 쿼리를 서버에서 직접 실행해 공지 목록을 렌더링하는 서버 페이지입니다.",
+      "nodeIds": [
+        "file:app/api/notices/route.ts",
+        "file:app/notices/page.tsx"
+      ],
+      "languageLesson": "Next.js App Router에서 route.ts는 HTTP 메서드 이름(GET, POST, PATCH, DELETE)을 export하는 Route Handler입니다. 같은 디렉터리 안에 page.tsx와 route.ts가 공존할 수 없으므로 API 핸들러는 app/api/ 하위에 분리됩니다."
+    },
+    {
+      "order": 11,
+      "title": "서버 입력 검증",
+      "description": "lib/validation.ts는 API 핸들러에서 호출되는 서버 전용 유틸리티 모듈입니다. URL 형식, 문자열 길이, 금액 범위 등을 검증하는 함수를 제공하여 잘못된 데이터가 DB에 저장되는 것을 방지합니다. fan-in이 3으로 공지 API, 파일 업로드 API, FloorMapEditor가 이 모듈을 공통으로 사용합니다.",
+      "nodeIds": [
+        "file:lib/validation.ts"
+      ]
+    },
+    {
+      "order": 12,
+      "title": "관리자 패널",
+      "description": "app/admin/(protected)/layout.tsx는 auth.ts로 세션을 확인하고, 인증되지 않은 요청은 로그인 페이지로 리다이렉트하는 가드 역할을 합니다. app/admin/(protected)/page.tsx는 인증 후 보이는 대시보드로 공지, 자료, 건물 정보 등 콘텐츠 관리 기능의 진입점입니다. Next.js의 route groups 기능을 활용해 URL 경로 없이 레이아웃 중첩을 구현합니다.",
+      "nodeIds": [
+        "file:app/admin/(protected)/layout.tsx",
+        "file:app/admin/(protected)/page.tsx"
+      ],
+      "languageLesson": "Next.js의 (folderName) 문법은 route group으로, URL 경로에는 나타나지 않으면서 레이아웃을 공유하는 페이지들을 논리적으로 묶습니다. /admin/(protected)/page.tsx는 실제 URL상 /admin으로 접근됩니다."
+    },
+    {
+      "order": 13,
+      "title": "파일 업로드 API",
+      "description": "app/api/upload/route.ts는 관리자가 이미지를 업로드할 때 사용하는 엔드포인트입니다. MIME 타입 검사와 sharp 라이브러리로 이미지 크기를 추출한 뒤, Vercel Blob 스토리지에 저장하고 URL을 반환합니다. auth.ts로 관리자 세션을 검증하고 validation.ts로 입력을 검사하여 무단 업로드를 차단합니다.",
+      "nodeIds": [
+        "file:app/api/upload/route.ts"
+      ]
+    },
+    {
+      "order": 14,
+      "title": "층별 지도 핵심 시스템",
+      "description": "이 프로젝트의 가장 독창적인 기능은 건물 층별 인터랙티브 지도입니다. lib/svg-parser.ts는 업로드된 SVG를 XSS 공격 벡터(script, onload 등)로부터 sanitize하고 방 폴리곤을 감지합니다. lib/pathfinding.ts는 Dijkstra 알고리즘으로 두 방 사이의 최단 경로를 계산합니다. 이 두 유틸리티가 함께 FloorMapViewer의 안전한 렌더링과 경로 탐색을 뒷받침합니다.",
+      "nodeIds": [
+        "file:lib/svg-parser.ts",
+        "file:lib/pathfinding.ts"
+      ],
+      "languageLesson": "Dijkstra 알고리즘은 음수 가중치가 없는 그래프에서 단일 출발점 최단 경로를 O((V+E) log V)에 구합니다. SVG sanitization은 DOMParser로 파싱 후 허용 태그/속성 화이트리스트만 남기는 방식으로 XSS를 차단합니다."
+    },
+    {
+      "order": 15,
+      "title": "지도 뷰어 & 에디터",
+      "description": "components/FloorMapViewer.tsx는 학생 대면 지도 컴포넌트로 SVG를 렌더링하고, 방을 클릭하면 교수 정보 팝업을 표시하며, svg-parser와 pathfinding을 사용해 경로를 시각적으로 그려줍니다. components/admin/FloorMapEditor.tsx는 관리자용 에디터로 SVG/이미지 업로드, 폴리곤 그리기, 내비게이션 그래프 편집 기능을 제공합니다. app/department-info/department-info-client.tsx는 건물 선택 UI와 교수 검색을 FloorMapViewer와 결합한 최종 사용자 페이지입니다.",
+      "nodeIds": [
+        "file:components/FloorMapViewer.tsx",
+        "file:components/admin/FloorMapEditor.tsx",
+        "file:app/department-info/department-info-client.tsx"
+      ]
+    }
+  ]
+}

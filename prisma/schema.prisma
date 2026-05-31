@@ -135,17 +135,22 @@ model Building {
 
 // 층별 평면도
 model BuildingFloor {
-  id          Int         @id @default(autoincrement())
-  buildingId  Int
-  building    Building    @relation(fields: [buildingId], references: [id], onDelete: Cascade)
-  level       Int
-  imageUrl    String?
-  description String?
-  width       Int?        // 평면도 픽셀 폭 (좌표 정규화 기준)
-  height      Int?
-  driveFileId String?     // Drive 업로드 시 ID
-  professors  Professor[]
-  rooms       Room[]
+  id           Int         @id @default(autoincrement())
+  buildingId   Int
+  building     Building    @relation(fields: [buildingId], references: [id], onDelete: Cascade)
+  level        Int
+  imageUrl     String?
+  description  String?
+  width        Int?        // 평면도 픽셀 폭 (좌표 정규화 기준)
+  height       Int?
+  imageWidth   Int?        // 업로드 이미지/SVG 자연 너비 (FloorMapViewer 용)
+  imageHeight  Int?        // 업로드 이미지/SVG 자연 높이 (FloorMapViewer 용)
+  svgContent   String?     // 인라인 SVG (raw XML) — DWG/PDF 변환 SVG 그대로 저장
+  regionsJson  String?     // 방 다각형 영역 JSON { rooms: [{id, polygon, label?}] }
+  graphJson    String?     // 길찾기 그래프 JSON { nodes: [...], edges: [...] }
+  driveFileId  String?     // Drive 업로드 시 ID
+  professors   Professor[]
+  rooms        Room[]
   @@unique([buildingId, level])
 }
 

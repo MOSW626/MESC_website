@@ -16,12 +16,16 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const level = typeof body.level === "number" ? body.level : null;
   const imageUrl = typeof body.imageUrl === "string" ? body.imageUrl.trim() || null : null;
   const description = typeof body.description === "string" ? body.description.trim().slice(0, 500) || null : null;
+  const imageWidth = typeof body.imageWidth === "number" ? body.imageWidth : null;
+  const imageHeight = typeof body.imageHeight === "number" ? body.imageHeight : null;
+  const regionsJson = typeof body.regionsJson === "string" ? body.regionsJson || null : null;
+  const graphJson = typeof body.graphJson === "string" ? body.graphJson || null : null;
 
   if (level === null) return NextResponse.json({ error: "층은 필수입니다." }, { status: 400 });
 
   try {
     const floor = await prisma.buildingFloor.create({
-      data: { buildingId, level, imageUrl, description },
+      data: { buildingId, level, imageUrl, imageWidth, imageHeight, regionsJson, graphJson, description },
     });
     return NextResponse.json(floor, { status: 201 });
   } catch {

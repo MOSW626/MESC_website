@@ -7,7 +7,7 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
-import { Building2, Loader2, MapPin, Plus, Trash2, Upload, X } from "lucide-react";
+import { Building2, Loader2, Map, MapPin, Plus, Trash2, Upload, X } from "lucide-react";
 import { AdminGuide } from "@/components/admin-guide";
 import { FloorplanEditor } from "@/components/floorplan/floorplan-editor";
 
@@ -390,6 +390,15 @@ export default function AdminBuildingsPage() {
                       <div className="flex gap-1">
                         <Button variant="outline" size="sm" onClick={() => setPinFloor(f)} disabled={!f.imageUrl} className="gap-1">
                           <MapPin className="h-3.5 w-3.5" />핀 배치
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          className="gap-1.5 text-xs"
+                          onClick={() => window.open(`/admin/buildings/floor/${f.id}`, "_blank")}
+                        >
+                          <Map className="h-3.5 w-3.5" />
+                          지도 편집
                         </Button>
                         <Button variant="ghost" size="sm" onClick={() => deleteFloor(f.id)} className="text-destructive">
                           <Trash2 className="h-4 w-4" />

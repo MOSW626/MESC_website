@@ -39,6 +39,11 @@ interface FloorWithProfs {
   id: number;
   level: number;
   imageUrl: string | null;
+  imageWidth: number | null;
+  imageHeight: number | null;
+  svgContent: string | null;
+  regionsJson: string | null;
+  graphJson: string | null;
   description: string | null;
   width: number | null;
   height: number | null;

@@ -218,3 +218,11 @@ html {
 ::-webkit-scrollbar-thumb {
   @apply bg-border rounded-full hover:bg-muted-foreground;
 }
+
+/* 평면도 경로 오버레이 - 대시 이동 애니메이션 */
+@keyframes dashMove {
+  to { stroke-dashoffset: -30; }
+}
+.animate-dash {
+  animation: dashMove 1s linear infinite;
+}
